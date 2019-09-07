@@ -16,12 +16,10 @@ func meta() *LogEntry {
 		pc, fileRaw, line, _ = runtime.Caller(skip)
 		functionRaw = runtime.FuncForPC(pc).Name()
 		// fmt.Println(functionRaw)
-
 		for _, skipFunction := range skipFunctions {
 			if functionRaw == skipFunction {
 				skip++
 				goto start
-
 			}
 		}
 		break
@@ -30,7 +28,12 @@ func meta() *LogEntry {
 	file := path.Base(fileRaw)
 	packageEnd := strings.LastIndex(functionRaw, ".")
 	packageName := functionRaw[:packageEnd]
-	functionName := functionRaw[packageEnd+1:]
+	var functionName string
+	if debug {
+		functionName = functionRaw
+	} else {
+		functionName = functionRaw[packageEnd+1:]
+	}
 
 	return &LogEntry{
 		Package:  packageName,
