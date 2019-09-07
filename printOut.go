@@ -2,7 +2,6 @@ package ulog
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"time"
 )
@@ -16,9 +15,8 @@ func printOut(fmtString *string, level logLevelString, v ...interface{}) {
 	} else {
 		logLine.Message = fmt.Sprint(v...)
 	}
-	err := template.Must(lineTemplate.Clone()).Execute(writer, logLine)
+	err := lineTemplate.Execute(writer, logLine)
 	if err != nil {
 		log.Printf("could not create ulogger line: %s", err)
 	}
-
 }

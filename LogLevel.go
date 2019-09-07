@@ -10,3 +10,17 @@ const (
 	LEVEL_ERROR
 	LEVEL_FATAL
 )
+
+var logLevel LogLevel = LEVEL_INFO
+
+func GetLogLevel() LogLevel {
+	return logLevel
+}
+
+func SetLogLevel(_level LogLevel) {
+	logLevel = _level
+}
+
+func SetLogLevelFromString(levelRaw string) {
+	SetLogLevel(LogLevelFromString(levelRaw))
+}
