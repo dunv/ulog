@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// TODO: add support for replacing functions -> i.e. generic http-logging
 func meta() *LogEntry {
 	skip := 3
 	var pc uintptr
