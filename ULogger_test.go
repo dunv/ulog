@@ -39,7 +39,8 @@ func TestLogging(t *testing.T) {
 func setup(logLevel LogLevel) *bytes.Buffer {
 	tmp := []byte{}
 	buffer := bytes.NewBuffer(tmp)
-	Init(buffer, logLevel)
+	SetLogLevel(logLevel)
+	SetWriter(buffer)
 	return buffer
 }
 
