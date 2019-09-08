@@ -2,6 +2,8 @@ package ulog
 
 import (
 	"sort"
+
+	"github.com/dunv/uhelpers"
 )
 
 var skipFunctions []string = []string{
@@ -32,11 +34,12 @@ func SkipFunctions() []string {
 func AddSkipFunctions(_skipFunctions ...string) {
 	sort.Strings(skipFunctions)
 	skipFunctionsToBeAdded := []string{}
+
 	for index, desiredSkipFunction := range _skipFunctions {
-		i := sort.SearchStrings(skipFunctions, desiredSkipFunction)
-		if !(i == 0 && skipFunctions[i] == desiredSkipFunction) && !(i > 0 && i < len(skipFunctions)) {
+		if !uhelpers.SliceContainsItem(skipFunctions, desiredSkipFunction) {
 			skipFunctionsToBeAdded = append(skipFunctionsToBeAdded, _skipFunctions[index])
 		}
 	}
+
 	skipFunctions = append(skipFunctions, skipFunctionsToBeAdded...)
 }

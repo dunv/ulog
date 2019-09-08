@@ -1,12 +1,12 @@
 package ulog
 
 import (
+	"fmt"
 	"path"
 	"runtime"
 	"strings"
 )
 
-// TODO: add support for replacing functions -> i.e. generic http-logging
 func meta() *LogEntry {
 	skip := 3
 	var pc uintptr
@@ -16,9 +16,11 @@ func meta() *LogEntry {
 	start:
 		pc, fileRaw, line, _ = runtime.Caller(skip)
 		functionRaw = runtime.FuncForPC(pc).Name()
-		// fmt.Println(functionRaw)
 		for _, skipFunction := range skipFunctions {
 			if functionRaw == skipFunction {
+				if debug {
+					fmt.Printf("skipping fn %s\n", functionRaw)
+				}
 				skip++
 				goto start
 			}
@@ -26,6 +28,7 @@ func meta() *LogEntry {
 		break
 
 	}
+
 	file := path.Base(fileRaw)
 	packageEnd := strings.LastIndex(functionRaw, ".")
 	packageName := functionRaw[:packageEnd]
@@ -34,6 +37,17 @@ func meta() *LogEntry {
 		functionName = functionRaw
 	} else {
 		functionName = functionRaw[packageEnd+1:]
+	}
+
+	// Replace logic
+	if val, ok := replaceFunctions[functionRaw]; ok {
+		if debug {
+			fmt.Printf("replacing fn %s with %s\n", functionRaw, val)
+		}
+		functionName = ""
+		packageName = val
+		file = ""
+		line = 0
 	}
 
 	return &LogEntry{
