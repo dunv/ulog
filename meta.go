@@ -22,6 +22,10 @@ func meta() *LogEntry {
 					fmt.Printf("skipping fn %s\n", functionRaw)
 				}
 				skip++
+				// "just-in-case-failsafe"
+				if skip > 100000 {
+					break
+				}
 				goto start
 			}
 		}

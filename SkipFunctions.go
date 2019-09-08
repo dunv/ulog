@@ -38,8 +38,12 @@ func AddSkipFunctions(_skipFunctions ...string) {
 	skipFunctionsToBeAdded := []string{}
 
 	for index, desiredSkipFunction := range _skipFunctions {
-		if !uhelpers.SliceContainsItem(skipFunctions, desiredSkipFunction) {
-			skipFunctionsToBeAdded = append(skipFunctionsToBeAdded, _skipFunctions[index])
+		if desiredSkipFunction != "main.main" {
+			if !uhelpers.SliceContainsItem(skipFunctions, desiredSkipFunction) {
+				skipFunctionsToBeAdded = append(skipFunctionsToBeAdded, _skipFunctions[index])
+			}
+		} else {
+			Error("cannot add main.main as skip function")
 		}
 	}
 
