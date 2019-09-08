@@ -25,6 +25,8 @@ var skipFunctions []string = []string{
 	"github.com/dunv/ulog.ULog.Panicf",
 	"github.com/dunv/ulog.ULog.Fatal",
 	"github.com/dunv/ulog.ULog.Fatalf",
+	"github.com/dunv/ulog.LogTaggedStruct",
+	"github.com/dunv/ulog.LogEnvStruct",
 }
 
 func SkipFunctions() []string {
