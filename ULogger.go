@@ -33,3 +33,7 @@ func (l ULog) Panic(v ...interface{})                    { Panic(v...) }
 func (l ULog) Panicf(fmtString string, v ...interface{}) { Panicf(fmtString, v...) }
 func (l ULog) Fatal(v ...interface{})                    { Fatal(v...) }
 func (l ULog) Fatalf(fmtString string, v ...interface{}) { Fatalf(fmtString, v...) }
+
+func NewUlog() *ULog {
+	return &ULog{}
+}
