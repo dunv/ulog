@@ -15,7 +15,7 @@ func printOut(fmtString *string, level logLevelString, v ...interface{}) {
 	} else {
 		logLine.Message = fmt.Sprint(v...)
 	}
-	err := lineTemplate.Execute(writer, logLine)
+	err := lineTemplate.Execute(logger.Writer(), logLine)
 	if err != nil {
 		log.Printf("could not create ulogger line: %s", err)
 	}
