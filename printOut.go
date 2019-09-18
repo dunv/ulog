@@ -1,6 +1,7 @@
 package ulog
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"time"
@@ -15,8 +16,10 @@ func printOut(fmtString *string, level logLevelString, v ...interface{}) {
 	} else {
 		logLine.Message = fmt.Sprint(v...)
 	}
-	err := lineTemplate.Execute(logger.Writer(), logLine)
+	var tpl bytes.Buffer
+	err := lineTemplate.Execute(&tpl, logLine)
 	if err != nil {
 		log.Printf("could not create ulogger line: %s", err)
 	}
+	logger.Printf(tpl.String())
 }
