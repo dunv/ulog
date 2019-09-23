@@ -28,19 +28,21 @@ func LogIfErrorToInfoSecondArg(_ interface{}, err error) {
 
 func LogLevelFromString(levelRaw string) LogLevel {
 	switch strings.ToUpper(levelRaw) {
-	case string(_LEVEL_TRACE):
+	case "TRACE":
 		return LEVEL_TRACE
-	case string(_LEVEL_DEBUG):
+	case "DEBUG":
 		return LEVEL_DEBUG
-	case string(_LEVEL_INFO):
+	case "INFO":
+		fallthrough
+	case "INFORMATION":
 		return LEVEL_INFO
-	case string(_LEVEL_WARNING):
+	case "WARN":
 		fallthrough
 	case "WARNING":
 		return LEVEL_WARNING
-	case string(_LEVEL_ERROR):
+	case "ERROR":
 		return LEVEL_ERROR
-	case string(_LEVEL_FATAL):
+	case "FATAL":
 		return LEVEL_FATAL
 	default:
 		Errorf("could not parse logLevel from string %s", levelRaw)
