@@ -5,6 +5,7 @@ import (
 	"reflect"
 )
 
+// TODO: add additional tags for masking values + showing defaults
 func LogEnvStruct(envStruct interface{}, prefix string) {
 	LogTaggedStruct(envStruct, "env", prefix)
 }
