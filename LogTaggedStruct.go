@@ -40,8 +40,8 @@ func LogTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, 
 	for _, warning := range allWarnings {
 		Warn(warning)
 	}
-	if len(allWarnings) > 0 {
-		Warn("Config ................................................................")
+	if len(allOutput) > 0 {
+		Info("Config ................................................................")
 	}
 	for _, output := range allOutput {
 		Info(output)
