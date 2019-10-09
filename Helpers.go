@@ -8,9 +8,21 @@ func LogIfError(err error) {
 	}
 }
 
+func PanicIfError(err error) {
+	if err != nil {
+		Panic(err)
+	}
+}
+
 func LogIfErrorSecondArg(_ interface{}, err error) {
 	if err != nil {
 		Error(err)
+	}
+}
+
+func PanicIfErrorSecondArg(_ interface{}, err error) {
+	if err != nil {
+		Panic(err)
 	}
 }
 
