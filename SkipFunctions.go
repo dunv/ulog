@@ -9,6 +9,8 @@ import (
 var skipFunctions []string = []string{
 	"github.com/dunv/ulog.LogIfError",
 	"github.com/dunv/ulog.LogIfErrorSecondArg",
+	"github.com/dunv/ulog.PanicIfError",
+	"github.com/dunv/ulog.PanicIfErrorSecondArg",
 	"github.com/dunv/ulog.LogIfErrorToInfo",
 	"github.com/dunv/ulog.LogIfErrorToInfoSecondArg",
 	"github.com/dunv/ulog.ULog.Trace",
