@@ -40,7 +40,7 @@ func setup(logLevel LogLevel) *bytes.Buffer {
 	tmp := []byte{}
 	buffer := bytes.NewBuffer(tmp)
 	SetLogLevel(logLevel)
-	SetWriter(buffer)
+	SetWriter(buffer, nil)
 	return buffer
 }
 
