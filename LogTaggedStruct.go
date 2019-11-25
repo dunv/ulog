@@ -11,21 +11,30 @@ func LogEnvStruct(envStruct interface{}, prefix string) {
 }
 
 func LogTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string) {
-	typeOf := reflect.TypeOf(taggedStruct)
-	valueOf := reflect.ValueOf(taggedStruct)
+	// Dereference if needed
+	usedTaggedStruct := taggedStruct
+	if reflect.ValueOf(taggedStruct).Kind() == reflect.Ptr {
+		usedTaggedStruct = reflect.ValueOf(taggedStruct).Elem().Interface()
+	}
+
+	typeOf := reflect.TypeOf(usedTaggedStruct)
+	valueOf := reflect.ValueOf(usedTaggedStruct)
 
 	allWarnings := []string{}
 	allOutput := []string{}
 
-	for i := 0; i < typeOf.NumField(); i++ {
-		tag := typeOf.Field(i).Tag.Get(tag)
-		maskTag := typeOf.Field(i).Tag.Get(maskTag)
-		warnTag := typeOf.Field(i).Tag.Get(warnTag)
+	for i := 0; i < valueOf.NumField(); i++ {
+		derefFieldVal := valueOf.Field(i)
+		derefFieldType := typeOf.Field(i)
+
+		tag := derefFieldType.Tag.Get(tag)
+		maskTag := derefFieldType.Tag.Get(maskTag)
+		warnTag := derefFieldType.Tag.Get(warnTag)
 		if tag != "" {
 			if maskTag != "" {
 				allOutput = append(allOutput, fmt.Sprintf("%s%s = %v", prefix, tag, "***"))
 			} else {
-				allOutput = append(allOutput, fmt.Sprintf("%s%s = %v", prefix, tag, getStringFromReflect(valueOf.Field(i))))
+				allOutput = append(allOutput, fmt.Sprintf("%s%s = %v", prefix, tag, getStringFromReflect(derefFieldVal)))
 			}
 
 			if warnTag == getStringFromReflect(valueOf.Field(i)) {
