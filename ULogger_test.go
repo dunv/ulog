@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestLogging(t *testing.T) {
+func TestLoggingHelpers(t *testing.T) {
 
 	buffer := setup(LEVEL_TRACE)
 	msg := "halloWelt"
@@ -24,7 +24,15 @@ func TestLogging(t *testing.T) {
 	check(buffer, _LEVEL_DEBUG, msg, t)
 
 	buffer = setup(LEVEL_TRACE)
+	Debugf(msg)
+	check(buffer, _LEVEL_DEBUG, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
 	Info(msg)
+	check(buffer, _LEVEL_INFO, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
+	Infof(msg)
 	check(buffer, _LEVEL_INFO, msg, t)
 
 	buffer = setup(LEVEL_TRACE)
@@ -32,9 +40,151 @@ func TestLogging(t *testing.T) {
 	check(buffer, _LEVEL_WARNING, msg, t)
 
 	buffer = setup(LEVEL_TRACE)
+	Warnf(msg)
+	check(buffer, _LEVEL_WARNING, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
 	Error(msg)
 	check(buffer, _LEVEL_ERROR, msg, t)
 
+	buffer = setup(LEVEL_TRACE)
+	Errorf(msg)
+	check(buffer, _LEVEL_ERROR, msg, t)
+}
+
+func TestLoggingPanic(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		} else {
+
+			checkDisregardPackage(buffer, _LEVEL_ERROR, "testError", t)
+		}
+	}()
+
+	Panic("testError")
+}
+
+func TestLoggingPanicf(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		} else {
+			checkDisregardPackage(buffer, _LEVEL_ERROR, "testError test", t)
+		}
+	}()
+
+	Panicf("testError %s", "test")
+}
+
+func TestLoggingFatal(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	SetDebug()
+	Fatal("testError")
+	checkDisregardPackage(buffer, _LEVEL_FATAL, "testError", t)
+}
+
+func TestLoggingFatalf(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	SetDebug()
+	Fatalf("testError %s", "test")
+	checkDisregardPackage(buffer, _LEVEL_FATAL, "testError test", t)
+}
+
+func TestLoggingWithCustomLogger(t *testing.T) {
+	tmpLogger := NewUlog()
+
+	buffer := setup(LEVEL_TRACE)
+	tmpLogger.Trace("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_TRACE, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Tracef("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_TRACE, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Debug("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_DEBUG, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Debugf("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_DEBUG, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Info("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_INFO, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Infof("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_INFO, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Warn("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_WARNING, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Warnf("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_WARNING, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Error("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_ERROR, "halloWelt", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger.Error("halloWelt")
+	checkDisregardPackage(buffer, _LEVEL_ERROR, "halloWelt", t)
+
+}
+
+func TestLoggingPanicCustom(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	tmpLogger := NewUlog()
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		} else {
+
+			checkDisregardPackage(buffer, _LEVEL_ERROR, "testError", t)
+		}
+	}()
+
+	tmpLogger.Panic("testError")
+}
+
+func TestLoggingPanicfCustom(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	tmpLogger := NewUlog()
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		} else {
+			checkDisregardPackage(buffer, _LEVEL_ERROR, "testError test", t)
+		}
+	}()
+
+	tmpLogger.Panicf("testError %s", "test")
+}
+
+func TestLoggingFatalCustom(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	tmpLogger := NewUlog()
+	SetDebug() // otherwise the program would exit
+	tmpLogger.Fatal("testError")
+	checkDisregardPackage(buffer, _LEVEL_FATAL, "testError", t)
+}
+
+func TestLoggingFatalfCustom(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	tmpLogger := NewUlog()
+	SetDebug() // otherwise the program would exit
+	tmpLogger.Fatalf("testError %s", "test")
+	checkDisregardPackage(buffer, _LEVEL_FATAL, "testError test", t)
 }
 
 func check(buffer *bytes.Buffer, level logLevelString, msg string, t *testing.T) {
@@ -43,7 +193,7 @@ func check(buffer *bytes.Buffer, level logLevelString, msg string, t *testing.T)
 		t.Error(err)
 	}
 
-	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog ULogger_test\.go:\d+ \(TestLogging\) \| %s$`, level, msg))
+	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog ULogger_test\.go:\d+ \(TestLoggingHelpers\) \| %s$`, level, msg))
 	if !re.Match(res) {
 		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
 	}

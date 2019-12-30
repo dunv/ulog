@@ -57,3 +57,10 @@ func TestSkipFunctions(t *testing.T) {
 	Trace("halloWelt")
 	checkCustomFunction(buffer, _LEVEL_TRACE, "halloWelt", "replacedRunner", t)
 }
+
+func TestGetSkipFunctions(t *testing.T) {
+	fns := SkipFunctions()
+	if len(fns) != len(skipFunctions) {
+		t.Errorf("could not retrieve skipFunctions")
+	}
+}

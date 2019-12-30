@@ -25,7 +25,7 @@ func checkDisregardPackage(buffer *bytes.Buffer, level logLevelString, msg strin
 		t.Error(err)
 	}
 
-	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog [a-zA-Z_]+\.go:\d+ \([a-zA-Z_]+\) \| %s$`, level, msg))
+	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog[\.a-zA-Z]* [a-zA-Z_]+\.go:\d+ \([a-zA-Z_\./]+\) \| %s$`, level, msg))
 	if !re.Match(res) {
 		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
 	}

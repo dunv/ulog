@@ -1,5 +1,6 @@
 package ulog
 
+// Interface containing all log-helper methods
 type ULogger interface {
 	Trace(v ...interface{})
 	Tracef(fmtString string, v ...interface{})
@@ -23,6 +24,7 @@ type ULogger interface {
 	LogIfErrorToInfoSecondArg(tmp interface{}, err error)
 }
 
+// A struct satisfying the ULogger interface. Currently only one global config for ulog is supported. This ULog cannot have a different configuration yet
 type ULog struct{}
 
 func (l ULog) Trace(v ...interface{})                           { Trace(v...) }

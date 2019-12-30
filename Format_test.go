@@ -42,6 +42,14 @@ func TestLoggingModifiedTemplate(t *testing.T) {
 
 }
 
+func TestLoggingModifiedTime(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	msg := "halloWelt"
+	SetTimestampFormat("2006-01-02 15:04:05")
+	Trace(msg)
+	checkWithModifiedTime(buffer, _LEVEL_TRACE, msg, t)
+}
+
 func checkWithModifiedTemplate(buffer *bytes.Buffer, level logLevelString, msg string, t *testing.T) {
 	res, err := ioutil.ReadAll(buffer)
 	if err != nil {
@@ -49,6 +57,18 @@ func checkWithModifiedTemplate(buffer *bytes.Buffer, level logLevelString, msg s
 	}
 
 	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| n\/a \| github.com\/dunv\/ulog Format_test\.go:\d+ \(TestLoggingModifiedTemplate\) \| %s$`, level, msg))
+	if !re.Match(res) {
+		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
+	}
+}
+
+func checkWithModifiedTime(buffer *bytes.Buffer, level logLevelString, msg string, t *testing.T) {
+	res, err := ioutil.ReadAll(buffer)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d \| %s \| github.com\/dunv\/ulog Format_test\.go:\d+ \(TestLoggingModifiedTime\) \| %s$`, level, msg))
 	if !re.Match(res) {
 		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
 	}

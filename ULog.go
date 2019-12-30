@@ -85,12 +85,20 @@ func Fatal(v ...interface{}) {
 	if logLevel <= LEVEL_FATAL {
 		printOut(nil, _LEVEL_FATAL, v...)
 	}
-	os.Exit(1)
+	// This way we can make it testable
+	if !debug {
+		printOut(nil, _LEVEL_FATAL, "would os.Exit(1), but debug is enabled, NOT exiting.")
+		os.Exit(1)
+	}
 }
 
 func Fatalf(fmtString string, v ...interface{}) {
 	if logLevel <= LEVEL_FATAL {
 		printOut(&fmtString, _LEVEL_FATAL, v...)
 	}
-	os.Exit(1)
+	// This way we can make it testable
+	if !debug {
+		printOut(nil, _LEVEL_FATAL, "would os.Exit(1), but debug is enabled, NOT exiting.")
+		os.Exit(1)
+	}
 }
