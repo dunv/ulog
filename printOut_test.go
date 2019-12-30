@@ -10,7 +10,6 @@ import (
 
 // Make sure the correct logging function is used. Formatting symbols should only be regarded when using a formatting function
 func TestPrintOut(t *testing.T) {
-	ResetFormat()
 	buffer := setup(LEVEL_TRACE)
 	msg := "halloWelt%s"
 	Trace(msg)

@@ -1,6 +1,8 @@
 package ulog
 
-import "text/template"
+import (
+	"text/template"
+)
 
 var origFmtString = "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n"
 var lineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(origFmtString))

@@ -9,30 +9,34 @@ import (
 )
 
 func TestLoggingModifiedTemplate(t *testing.T) {
-	SetFormatString("{{ .Time }} | {{ .Level }} | n/a | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n")
-
 	buffer := setup(LEVEL_TRACE)
+	SetFormatString("{{ .Time }} | {{ .Level }} | n/a | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n")
 	msg := "halloWelt"
 	Trace(msg)
 	checkWithModifiedTemplate(buffer, _LEVEL_TRACE, msg, t)
 
 	buffer = setup(LEVEL_TRACE)
+	SetFormatString("{{ .Time }} | {{ .Level }} | n/a | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n")
 	Tracef("test %s", msg)
 	checkWithModifiedTemplate(buffer, _LEVEL_TRACE, fmt.Sprintf("test %s", msg), t)
 
 	buffer = setup(LEVEL_TRACE)
+	SetFormatString("{{ .Time }} | {{ .Level }} | n/a | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n")
 	Debug(msg)
 	checkWithModifiedTemplate(buffer, _LEVEL_DEBUG, msg, t)
 
 	buffer = setup(LEVEL_TRACE)
+	SetFormatString("{{ .Time }} | {{ .Level }} | n/a | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n")
 	Info(msg)
 	checkWithModifiedTemplate(buffer, _LEVEL_INFO, msg, t)
 
 	buffer = setup(LEVEL_TRACE)
+	SetFormatString("{{ .Time }} | {{ .Level }} | n/a | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n")
 	Warn(msg)
 	checkWithModifiedTemplate(buffer, _LEVEL_WARNING, msg, t)
 
 	buffer = setup(LEVEL_TRACE)
+	SetFormatString("{{ .Time }} | {{ .Level }} | n/a | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n")
 	Error(msg)
 	checkWithModifiedTemplate(buffer, _LEVEL_ERROR, msg, t)
 

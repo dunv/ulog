@@ -9,7 +9,6 @@ import (
 )
 
 func TestLogging(t *testing.T) {
-	ResetFormat()
 
 	buffer := setup(LEVEL_TRACE)
 	msg := "halloWelt"
@@ -36,14 +35,6 @@ func TestLogging(t *testing.T) {
 	Error(msg)
 	check(buffer, _LEVEL_ERROR, msg, t)
 
-}
-
-func setup(logLevel LogLevel) *bytes.Buffer {
-	tmp := []byte{}
-	buffer := bytes.NewBuffer(tmp)
-	SetLogLevel(logLevel)
-	SetWriter(buffer, nil)
-	return buffer
 }
 
 func check(buffer *bytes.Buffer, level logLevelString, msg string, t *testing.T) {

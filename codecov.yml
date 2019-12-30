@@ -1,0 +1,2 @@
+ignore:
+  - "LogLevel.go"  # ignore folders and all its contents
