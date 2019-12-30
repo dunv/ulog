@@ -32,10 +32,29 @@ var skipFunctions []string = []string{
 	"github.com/dunv/ulog.LogEnvStruct",
 }
 
+// Get currently configured skipFunctions
 func SkipFunctions() []string {
 	return skipFunctions
 }
 
+// // Make expected output (which is only for info, not for debugging) more readable
+// Add skipFunctions. These functions will be skipped, when trying to determine the origin of a log-line.
+// This way helper functions which are in use for multiple different origins can be omitted.
+// For example
+//  ulog.AddSkipFunctions(
+//  	"github.com/dunv/uhttp.RenderError",
+//  	"github.com/dunv/uhttp/helpers.RenderError",
+//  	"github.com/dunv/uhttp.RenderErrorWithStatusCode",
+//  	"github.com/dunv/uhttp/helpers.RenderErrorWithStatusCode",
+//  	"github.com/dunv/uhttp.RenderMessage",
+//  	"github.com/dunv/uhttp/helpers.RenderMessage",
+//  	"github.com/dunv/uhttp.RenderMessageWithStatusCode",
+//  	"github.com/dunv/uhttp/helpers.RenderMessageWithStatusCode",
+//  	"github.com/dunv/uhttp.renderMessageWithStatusCode",
+//  	"github.com/dunv/uhttp/helpers.renderMessageWithStatusCode",
+//  	"github.com/dunv/uhttp/helpers.renderErrorWithStatusCode",
+//  	"github.com/dunv/uhttp.renderErrorWithStatusCode",
+//  )
 func AddSkipFunctions(_skipFunctions ...string) {
 	sort.Strings(skipFunctions)
 	skipFunctionsToBeAdded := []string{}

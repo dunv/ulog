@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// A writer (implementing the io.Writer interface) which logs everything to its configured logger and to ERROR-level
+// If not logger is configured, the default logger will be used
 type UErrorWriter struct {
 	Logger *ULogger
 }
@@ -19,6 +21,7 @@ func (l UErrorWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
+// Helper for instantiating UErrorWriter
 func NewErrorLogger(ulogger *ULogger) *log.Logger {
 	errorWriter := UErrorWriter{
 		Logger: ulogger,

@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// This is where all formatted log-output is actually printed
 func printOut(fmtString *string, level logLevelString, v ...interface{}) {
 	logLine := meta()
 	logLine.Time = time.Now().Format(tsFormat)

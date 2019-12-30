@@ -6,11 +6,13 @@ import (
 	"strings"
 )
 
+// Helper function to log out a struct annotated with "env", "mask" and "warnIf" annotations
+// Good to use with the "github.com/codingconcepts/env" package
 func LogEnvStruct(envStruct interface{}, prefix string) {
-	LogTaggedStructWithMaskingAndWarning(envStruct, "env", "mask", "warnIf", prefix)
+	logTaggedStructWithMaskingAndWarning(envStruct, "env", "mask", "warnIf", prefix)
 }
 
-func LogTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string) {
+func logTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string) {
 	// Dereference if needed
 	usedTaggedStruct := taggedStruct
 	if reflect.ValueOf(taggedStruct).Kind() == reflect.Ptr {

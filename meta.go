@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Helper function to select correct package, file, line and function for a logLine
 func meta() *LogEntry {
 	skip := 3
 	var pc uintptr
