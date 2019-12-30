@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/dunv/ulog.svg?branch=master)](https://travis-ci.org/dunv/ulog)
 [![GoDoc](https://godoc.org/github.com/dunv/ulog?status.svg)](https://godoc.org/github.com/dunv/ulog)
+[![codecov](https://codecov.io/gh/dunv/ulog/branch/master/graph/badge.svg)](https://codecov.io/gh/dunv/ulog)
 
 # ulog
 
@@ -22,10 +23,10 @@ ulog.SetLogLevelFromString(cfg.LogLevel)
 ### Usage examples
 ```
 ulog.Trace("helloWorld")
-ulog.Tracef("helloWorld %s", "today)
+ulog.Tracef("helloWorld %s", "today")
 ulog.Debug("helloWorld")
-ulog.Infof("helloWorld %s", "today)
-ulog.Errorf("helloWorld %s", "today)
-ulog.Fatalf("helloWorld %s", "today)
-ulog.Panicf("helloWorld %s", "today)
+ulog.Infof("helloWorld %s", "today")
+ulog.Errorf("helloWorld %s", "today")
+ulog.Fatalf("helloWorld %s", "today")
+ulog.Panicf("helloWorld %s", "today")
 ```
