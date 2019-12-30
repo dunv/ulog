@@ -17,15 +17,16 @@ func ResetFormat() {
 }
 
 // Use custom logging format (using text/template)
-// the original is "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n"
+// The original is
+//  "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n"
 // Available vars are
-// - Time
-// - Level
-// - Package
-// - File (not always available)
-// - Line (not always available)
-// - Function (not always available)
-// - Message
+//  - Time
+//  - Level
+//  - Package
+//  - File (not always available)
+//  - Line (not always available)
+//  - Function (not always available)
+//  - Message
 func SetFormatString(_fmtString string) {
 	fmtString = _fmtString
 	lineTemplate = template.Must(template.New("lineTemplate").Parse(fmtString))

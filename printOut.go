@@ -22,5 +22,5 @@ func printOut(fmtString *string, level logLevelString, v ...interface{}) {
 	if err != nil {
 		log.Printf("could not create ulogger line: %s", err)
 	}
-	logger.Printf(tpl.String())
+	logger.Print(tpl.String())
 }
