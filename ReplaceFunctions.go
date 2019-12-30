@@ -6,6 +6,11 @@ import (
 
 var replaceFunctions map[string]string = map[string]string{}
 
+// Reset replace-functions
+func ResetReplaceFunctions() {
+	replaceFunctions = map[string]string{}
+}
+
 // Get replace-functions
 func ReplaceFunctions() map[string]string {
 	return replaceFunctions

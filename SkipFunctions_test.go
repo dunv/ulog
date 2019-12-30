@@ -44,3 +44,16 @@ func TestAddSkipFunctions(t *testing.T) {
 	}
 
 }
+
+func TestSkipFunctions(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+
+	// Skip this function -> log should tell us testing.tRunner is the logging entity
+	AddSkipFunctions("github.com/dunv/ulog.TestSkipFunctions")
+
+	// Replacing is tested separately and is usable here (this way we do not need to pay attention if the line of code or the file of the testing std-lib changes)
+	AddReplaceFunction("testing.tRunner", "replacedRunner")
+
+	Trace("halloWelt")
+	checkCustomFunction(buffer, _LEVEL_TRACE, "halloWelt", "replacedRunner", t)
+}
