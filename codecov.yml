@@ -1,3 +1,8 @@
 ignore:
   - "Debug.go" 
   - "LogLevel.go" 
+
+coverage:
+  range: 60..80
+  round: down
+  precision: 2
