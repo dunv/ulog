@@ -90,15 +90,15 @@ func Fatalf(fmtString string, v ...interface{}) {
 }
 
 func Panic(v ...interface{}) {
-	if logLevel <= LEVEL_FATAL {
-		printOut(nil, _LEVEL_FATAL, v...)
+	if logLevel <= LEVEL_ERROR {
+		printOut(nil, _LEVEL_ERROR, v...)
 	}
 	panic(v)
 }
 
 func Panicf(fmtString string, v ...interface{}) {
-	if logLevel <= LEVEL_FATAL {
-		printOut(&fmtString, _LEVEL_FATAL, v...)
+	if logLevel <= LEVEL_ERROR {
+		printOut(&fmtString, _LEVEL_ERROR, v...)
 	}
 	panic(v)
 }
