@@ -67,20 +67,6 @@ func Errorf(fmtString string, v ...interface{}) {
 	}
 }
 
-func Panic(v ...interface{}) {
-	if logLevel <= LEVEL_ERROR {
-		printOut(nil, _LEVEL_ERROR, v...)
-	}
-	panic(v)
-}
-
-func Panicf(fmtString string, v ...interface{}) {
-	if logLevel <= LEVEL_ERROR {
-		printOut(&fmtString, _LEVEL_ERROR, v...)
-	}
-	panic(v)
-}
-
 func Fatal(v ...interface{}) {
 	if logLevel <= LEVEL_FATAL {
 		printOut(nil, _LEVEL_FATAL, v...)
@@ -100,5 +86,53 @@ func Fatalf(fmtString string, v ...interface{}) {
 	if !debug {
 		printOut(nil, _LEVEL_FATAL, "would os.Exit(1), but debug is enabled, NOT exiting.")
 		os.Exit(1)
+	}
+}
+
+func Panic(v ...interface{}) {
+	if logLevel <= LEVEL_ERROR {
+		printOut(nil, _LEVEL_ERROR, v...)
+	}
+	panic(v)
+}
+
+func Panicf(fmtString string, v ...interface{}) {
+	if logLevel <= LEVEL_ERROR {
+		printOut(&fmtString, _LEVEL_ERROR, v...)
+	}
+	panic(v)
+}
+
+func LogWithLevel(level LogLevel, v ...interface{}) {
+	switch level {
+	case LEVEL_TRACE:
+		Trace(v...)
+	case LEVEL_DEBUG:
+		Debug(v...)
+	case LEVEL_INFO:
+		Info(v...)
+	case LEVEL_WARNING:
+		Warn(v...)
+	case LEVEL_ERROR:
+		Error(v...)
+	case LEVEL_FATAL:
+		Fatal(v...)
+	}
+}
+
+func LogWithLevelf(level LogLevel, fmtString string, v ...interface{}) {
+	switch level {
+	case LEVEL_TRACE:
+		Tracef(fmtString, v...)
+	case LEVEL_DEBUG:
+		Debugf(fmtString, v...)
+	case LEVEL_INFO:
+		Infof(fmtString, v...)
+	case LEVEL_WARNING:
+		Warnf(fmtString, v...)
+	case LEVEL_ERROR:
+		Errorf(fmtString, v...)
+	case LEVEL_FATAL:
+		Fatalf(fmtString, v...)
 	}
 }
