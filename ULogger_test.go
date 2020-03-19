@@ -50,6 +50,26 @@ func TestLoggingHelpers(t *testing.T) {
 	buffer = setup(LEVEL_TRACE)
 	Errorf(msg)
 	check(buffer, _LEVEL_ERROR, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
+	LogWithLevel(LEVEL_TRACE, msg)
+	check(buffer, _LEVEL_TRACE, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
+	LogWithLevel(LEVEL_DEBUG, msg)
+	check(buffer, _LEVEL_DEBUG, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
+	LogWithLevel(LEVEL_INFO, msg)
+	check(buffer, _LEVEL_INFO, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
+	LogWithLevel(LEVEL_WARNING, msg)
+	check(buffer, _LEVEL_WARNING, msg, t)
+
+	buffer = setup(LEVEL_TRACE)
+	LogWithLevel(LEVEL_ERROR, msg)
+	check(buffer, _LEVEL_ERROR, msg, t)
 }
 
 func TestLoggingPanic(t *testing.T) {
@@ -83,14 +103,14 @@ func TestLoggingPanicf(t *testing.T) {
 
 func TestLoggingFatal(t *testing.T) {
 	buffer := setup(LEVEL_TRACE)
-	SetDebug()
+	SetDebug() // required, otherwise we will exit(1)
 	Fatal("testError")
 	checkDisregardPackage(buffer, _LEVEL_FATAL, "testError", t)
 }
 
 func TestLoggingFatalf(t *testing.T) {
 	buffer := setup(LEVEL_TRACE)
-	SetDebug()
+	SetDebug() // required, otherwise we will exit(1)
 	Fatalf("testError %s", "test")
 	checkDisregardPackage(buffer, _LEVEL_FATAL, "testError test", t)
 }
