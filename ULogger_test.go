@@ -207,6 +207,39 @@ func TestLoggingFatalfCustom(t *testing.T) {
 	checkDisregardPackage(buffer, _LEVEL_FATAL, "testError test", t)
 }
 
+// We had a variable-shadowing problem here before -> test struct-logger explicitly
+func TestLoggingWithLevel(t *testing.T) {
+	buffer := setup(LEVEL_TRACE)
+	tmpLogger := NewUlog()
+	tmpLogger.LogWithLevelf(LEVEL_TRACE, "testTrace")
+	checkDisregardPackage(buffer, _LEVEL_TRACE, "testTrace", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger = NewUlog()
+	tmpLogger.LogWithLevelf(LEVEL_DEBUG, "testDebug")
+	checkDisregardPackage(buffer, _LEVEL_DEBUG, "testDebug", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger = NewUlog()
+	tmpLogger.LogWithLevelf(LEVEL_INFO, "testInfo")
+	checkDisregardPackage(buffer, _LEVEL_INFO, "testInfo", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger = NewUlog()
+	tmpLogger.LogWithLevelf(LEVEL_WARNING, "testWarn")
+	checkDisregardPackage(buffer, _LEVEL_WARNING, "testWarn", t)
+
+	buffer = setup(LEVEL_TRACE)
+	tmpLogger = NewUlog()
+	tmpLogger.LogWithLevelf(LEVEL_ERROR, "testError")
+	checkDisregardPackage(buffer, _LEVEL_ERROR, "testError", t)
+}
+
+func TestIfInterfaceIsMatchedByULog(t *testing.T) {
+	var customLogger ULogger = NewUlog()
+	_ = customLogger // circumvent compiler problem
+}
+
 func check(buffer *bytes.Buffer, level logLevelString, msg string, t *testing.T) {
 	res, err := ioutil.ReadAll(buffer)
 	if err != nil {

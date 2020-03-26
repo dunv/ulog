@@ -14,17 +14,36 @@ const (
 	LEVEL_FATAL
 )
 
+func (l LogLevel) String() string {
+	switch l {
+	case LEVEL_TRACE:
+		return string(_LEVEL_TRACE)
+	case LEVEL_DEBUG:
+		return string(_LEVEL_DEBUG)
+	case LEVEL_INFO:
+		return string(_LEVEL_INFO)
+	case LEVEL_WARNING:
+		return string(_LEVEL_WARNING)
+	case LEVEL_ERROR:
+		return string(_LEVEL_ERROR)
+	case LEVEL_FATAL:
+		return string(_LEVEL_FATAL)
+	default:
+		return string(_LEVEL_UNDEFINED)
+	}
+}
+
 // Set default logLevel
-var logLevel LogLevel = LEVEL_INFO
+var globalLogLevel LogLevel = LEVEL_INFO
 
 // Get currently set logLevel
 func GetLogLevel() LogLevel {
-	return logLevel
+	return globalLogLevel
 }
 
 // Set logLevel
 func SetLogLevel(_level LogLevel) {
-	logLevel = _level
+	globalLogLevel = _level
 }
 
 // Set logLevel from string
@@ -62,10 +81,11 @@ func logLevelFromString(levelRaw string) LogLevel {
 type logLevelString string
 
 const (
-	_LEVEL_TRACE   logLevelString = "TRACE"
-	_LEVEL_DEBUG   logLevelString = "DEBUG"
-	_LEVEL_INFO    logLevelString = "INFO "
-	_LEVEL_WARNING logLevelString = "WARN "
-	_LEVEL_ERROR   logLevelString = "ERROR"
-	_LEVEL_FATAL   logLevelString = "FATAL"
+	_LEVEL_TRACE     logLevelString = "TRACE"
+	_LEVEL_DEBUG     logLevelString = "DEBUG"
+	_LEVEL_INFO      logLevelString = "INFO "
+	_LEVEL_WARNING   logLevelString = "WARN "
+	_LEVEL_ERROR     logLevelString = "ERROR"
+	_LEVEL_FATAL     logLevelString = "FATAL"
+	_LEVEL_UNDEFINED logLevelString = "UNDEFINED"
 )

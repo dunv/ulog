@@ -1,13 +1,13 @@
 package ulog
 
-var debug bool = false
+var globalDebug bool = false
 
 // Enable debugging skipFunctions and ReplaceFunctions
 func SetDebug() {
-	debug = true
+	globalDebug = true
 }
 
 // Disable debugging skipFunctions and ReplaceFunctions
 func UnsetDebug() {
-	debug = false
+	globalDebug = false
 }

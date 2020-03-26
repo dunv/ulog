@@ -19,7 +19,7 @@ func meta() *LogEntry {
 		functionRaw = runtime.FuncForPC(pc).Name()
 		for _, skipFunction := range skipFunctions {
 			if functionRaw == skipFunction {
-				if debug {
+				if globalDebug {
 					fmt.Printf("skipping fn %s\n", functionRaw)
 				}
 				skip++
@@ -38,7 +38,7 @@ func meta() *LogEntry {
 	packageEnd := strings.LastIndex(functionRaw, ".")
 	packageName := functionRaw[:packageEnd]
 	var functionName string
-	if debug {
+	if globalDebug {
 		functionName = functionRaw
 	} else {
 		functionName = functionRaw[packageEnd+1:]
@@ -46,7 +46,7 @@ func meta() *LogEntry {
 
 	// Replace logic
 	if val, ok := replaceFunctions[functionRaw]; ok {
-		if debug {
+		if globalDebug {
 			fmt.Printf("replacing fn %s with %s\n", functionRaw, val)
 		}
 		functionName = ""
