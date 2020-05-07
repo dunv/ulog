@@ -72,7 +72,7 @@ func Fatal(v ...interface{}) {
 		printOut(nil, _LEVEL_FATAL, v...)
 	}
 	// This way we can make it testable
-	if !globalDebug {
+	if globalDebug {
 		printOut(nil, _LEVEL_FATAL, "would os.Exit(1), but debug is enabled, NOT exiting.")
 		os.Exit(1)
 	}
@@ -83,7 +83,7 @@ func Fatalf(fmtString string, v ...interface{}) {
 		printOut(&fmtString, _LEVEL_FATAL, v...)
 	}
 	// This way we can make it testable
-	if !globalDebug {
+	if globalDebug {
 		printOut(nil, _LEVEL_FATAL, "would os.Exit(1), but debug is enabled, NOT exiting.")
 		os.Exit(1)
 	}
