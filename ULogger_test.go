@@ -176,21 +176,6 @@ func TestLoggingPanicCustom(t *testing.T) {
 	tmpLogger.Panic("testError")
 }
 
-func TestLoggingPanicfCustom(t *testing.T) {
-	buffer := setup(LEVEL_TRACE)
-	tmpLogger := NewUlog()
-
-	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("The code did not panic")
-		} else {
-			checkDisregardPackage(buffer, _LEVEL_ERROR, "testError test", t)
-		}
-	}()
-
-	tmpLogger.Panicf("testError %s", "test")
-}
-
 func TestLoggingFatalCustom(t *testing.T) {
 	buffer := setup(LEVEL_TRACE)
 	tmpLogger := NewUlog()

@@ -91,16 +91,16 @@ func Fatalf(fmtString string, v ...interface{}) {
 	}
 }
 
-func Panic(v ...interface{}) {
+func Panic(v interface{}) {
 	if globalLogLevel <= LEVEL_ERROR {
-		printOut(nil, _LEVEL_ERROR, v...)
+		printOut(nil, _LEVEL_ERROR, v)
 	}
 	panic(v)
 }
 
-func Panicf(fmtString string, v ...interface{}) {
+func Panicf(fmtString string, v interface{}) {
 	if globalLogLevel <= LEVEL_ERROR {
-		printOut(&fmtString, _LEVEL_ERROR, v...)
+		printOut(&fmtString, _LEVEL_ERROR, v)
 	}
 	panic(v)
 }

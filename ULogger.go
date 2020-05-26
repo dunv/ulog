@@ -12,8 +12,7 @@ type ULogger interface {
 	Warnf(fmtString string, v ...interface{})
 	Error(v ...interface{})
 	Errorf(fmtString string, v ...interface{})
-	Panic(v ...interface{})
-	Panicf(fmtString string, v ...interface{})
+	Panic(v interface{})
 	Fatal(v ...interface{})
 	Fatalf(fmtString string, v ...interface{})
 	LogWithLevel(level LogLevel, v ...interface{})
@@ -39,8 +38,7 @@ func (l ULog) Warn(v ...interface{})                               { Warn(v...) 
 func (l ULog) Warnf(fmtString string, v ...interface{})            { Warnf(fmtString, v...) }
 func (l ULog) Error(v ...interface{})                              { Error(v...) }
 func (l ULog) Errorf(fmtString string, v ...interface{})           { Errorf(fmtString, v...) }
-func (l ULog) Panic(v ...interface{})                              { Panic(v...) }
-func (l ULog) Panicf(fmtString string, v ...interface{})           { Panicf(fmtString, v...) }
+func (l ULog) Panic(v interface{})                                 { Panic(v) }
 func (l ULog) Fatal(v ...interface{})                              { Fatal(v...) }
 func (l ULog) Fatalf(fmtString string, v ...interface{})           { Fatalf(fmtString, v...) }
 func (l ULog) LogWithLevel(customLevel LogLevel, v ...interface{}) { LogWithLevel(customLevel, v...) }

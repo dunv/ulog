@@ -1,7 +1,5 @@
 module github.com/dunv/ulog
 
-require github.com/dunv/uhelpers v1.0.11
-
-// replace github.com/dunv/uhelpers => ../uhelpers
+require github.com/dunv/uhelpers v1.0.13
 
 go 1.12
