@@ -12,6 +12,41 @@ func LogIfError(err error) {
 	}
 }
 
+// Logs the error to TRACE-level if is not nil
+func TraceIfError(err error) {
+	if err != nil {
+		Trace(err)
+	}
+}
+
+// Logs the error to DEBUG-level if is not nil
+func DebugIfError(err error) {
+	if err != nil {
+		Debug(err)
+	}
+}
+
+// Logs the error to INFO-level if is not nil
+func InfoIfError(err error) {
+	if err != nil {
+		Info(err)
+	}
+}
+
+// Logs the error to WARN-level if is not nil
+func WarnIfError(err error) {
+	if err != nil {
+		Warn(err)
+	}
+}
+
+// Logs the error to FATAL-level if is not nil
+func FatalIfError(err error) {
+	if err != nil {
+		Fatal(err)
+	}
+}
+
 // Logs the error to PANIC-level (and panicking after) if is not nil
 func PanicIfError(err error) {
 	if err != nil {
@@ -20,17 +55,30 @@ func PanicIfError(err error) {
 }
 
 // Logs if error received as second argument to ERROR-level is not nil (first argument is discarded)
-func LogIfErrorSecondArg(_ interface{}, err error) {
+func LogIfErrorSecondArg(input interface{}, err error) interface{} {
 	if err != nil {
 		Error(err)
+		return input
 	}
+	return input
+}
+
+// Logs if error received as second argument to FATAL-level (and panicking after) is not nil (first argument is discarded)
+func FatalIfErrorSecondArg(input interface{}, err error) interface{} {
+	if err != nil {
+		Fatal(err)
+		return input
+	}
+	return input
 }
 
 // Logs if error received as second argument to PANIC-level (and panicking after) is not nil (first argument is discarded)
-func PanicIfErrorSecondArg(_ interface{}, err error) {
+func PanicIfErrorSecondArg(input interface{}, err error) interface{} {
 	if err != nil {
 		Panic(err)
+		return input
 	}
+	return input
 }
 
 // Logs the error to INFO-level if it is not nil
