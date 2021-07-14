@@ -12,6 +12,12 @@ func LogEnvStruct(envStruct interface{}, prefix string) {
 	logTaggedStructWithMaskingAndWarning(envStruct, "env", "mask", "warnIf", prefix)
 }
 
+// Helper function to log out a struct annotated with "json", "mask" and "warnIf" annotations
+// Good to use with the "encoding/json" package
+func LogJSONStruct(envStruct interface{}, prefix string) {
+	logTaggedStructWithMaskingAndWarning(envStruct, "json", "mask", "warnIf", prefix)
+}
+
 func logTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string) {
 	// Dereference if needed
 	usedTaggedStruct := taggedStruct

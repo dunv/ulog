@@ -8,12 +8,10 @@ var origFmtString = "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {
 var globalLineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(origFmtString))
 var origTsFormat string = "2006-01-02 15:04:05.000"
 
-var globalFmtString = origFmtString
 var globalTsFormat = origTsFormat
 
 // Use original logging format
 func ResetFormat() {
-	globalFmtString = origFmtString
 	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(origFmtString))
 	globalTsFormat = origTsFormat
 }
@@ -30,7 +28,6 @@ func ResetFormat() {
 //  - Function (not always available)
 //  - Message
 func SetFormatString(_fmtString string) {
-	globalFmtString = _fmtString
 	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(_fmtString))
 }
 
