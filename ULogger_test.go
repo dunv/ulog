@@ -94,11 +94,11 @@ func TestLoggingPanicf(t *testing.T) {
 		if r := recover(); r == nil {
 			t.Errorf("The code did not panic")
 		} else {
-			checkDisregardPackage(buffer, _LEVEL_ERROR, "testError test", t)
+			checkDisregardPackage(buffer, _LEVEL_ERROR, "testError test1 test2", t)
 		}
 	}()
 
-	Panicf("testError %s", "test")
+	Panicf("testError %s %s", "test1", "test2")
 }
 
 func TestLoggingFatal(t *testing.T) {
