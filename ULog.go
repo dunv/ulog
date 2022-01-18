@@ -98,9 +98,9 @@ func Panic(v interface{}) {
 	panic(v)
 }
 
-func Panicf(fmtString string, v interface{}) {
+func Panicf(fmtString string, v ...interface{}) {
 	if globalLogLevel <= LEVEL_ERROR {
-		printOut(&fmtString, _LEVEL_ERROR, v)
+		printOut(&fmtString, _LEVEL_ERROR, v...)
 	}
 	panic(v)
 }
