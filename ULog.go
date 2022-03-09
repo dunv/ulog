@@ -8,67 +8,67 @@ import (
 var logger = log.New(os.Stdout, "", 0)
 
 func Trace(v ...interface{}) {
-	if globalLogLevel <= LEVEL_TRACE {
+	if GetLogLevel() <= LEVEL_TRACE {
 		printOut(nil, _LEVEL_TRACE, v...)
 	}
 }
 
 func Tracef(fmtString string, v ...interface{}) {
-	if globalLogLevel <= LEVEL_TRACE {
+	if GetLogLevel() <= LEVEL_TRACE {
 		printOut(&fmtString, _LEVEL_TRACE, v...)
 	}
 }
 
 func Debug(v ...interface{}) {
-	if globalLogLevel <= LEVEL_DEBUG {
+	if GetLogLevel() <= LEVEL_DEBUG {
 		printOut(nil, _LEVEL_DEBUG, v...)
 	}
 
 }
 func Debugf(fmtString string, v ...interface{}) {
-	if globalLogLevel <= LEVEL_DEBUG {
+	if GetLogLevel() <= LEVEL_DEBUG {
 		printOut(&fmtString, _LEVEL_DEBUG, v...)
 	}
 }
 
 func Info(v ...interface{}) {
-	if globalLogLevel <= LEVEL_INFO {
+	if GetLogLevel() <= LEVEL_INFO {
 		printOut(nil, _LEVEL_INFO, v...)
 	}
 }
 
 func Infof(fmtString string, v ...interface{}) {
-	if globalLogLevel <= LEVEL_INFO {
+	if GetLogLevel() <= LEVEL_INFO {
 		printOut(&fmtString, _LEVEL_INFO, v...)
 	}
 }
 
 func Warn(v ...interface{}) {
-	if globalLogLevel <= LEVEL_WARNING {
+	if GetLogLevel() <= LEVEL_WARNING {
 		printOut(nil, _LEVEL_WARNING, v...)
 	}
 }
 
 func Warnf(fmtString string, v ...interface{}) {
-	if globalLogLevel <= LEVEL_WARNING {
+	if GetLogLevel() <= LEVEL_WARNING {
 		printOut(&fmtString, _LEVEL_WARNING, v...)
 	}
 }
 
 func Error(v ...interface{}) {
-	if globalLogLevel <= LEVEL_ERROR {
+	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(nil, _LEVEL_ERROR, v...)
 	}
 }
 
 func Errorf(fmtString string, v ...interface{}) {
-	if globalLogLevel <= LEVEL_ERROR {
+	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(&fmtString, _LEVEL_ERROR, v...)
 	}
 }
 
 func Fatal(v ...interface{}) {
-	if globalLogLevel <= LEVEL_FATAL {
+	if GetLogLevel() <= LEVEL_FATAL {
 		printOut(nil, _LEVEL_FATAL, v...)
 	}
 	// This way we can make it testable
@@ -80,7 +80,7 @@ func Fatal(v ...interface{}) {
 }
 
 func Fatalf(fmtString string, v ...interface{}) {
-	if globalLogLevel <= LEVEL_FATAL {
+	if GetLogLevel() <= LEVEL_FATAL {
 		printOut(&fmtString, _LEVEL_FATAL, v...)
 	}
 	// This way we can make it testable
@@ -92,14 +92,14 @@ func Fatalf(fmtString string, v ...interface{}) {
 }
 
 func Panic(v interface{}) {
-	if globalLogLevel <= LEVEL_ERROR {
+	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(nil, _LEVEL_ERROR, v)
 	}
 	panic(v)
 }
 
 func Panicf(fmtString string, v ...interface{}) {
-	if globalLogLevel <= LEVEL_ERROR {
+	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(&fmtString, _LEVEL_ERROR, v...)
 	}
 	panic(v)

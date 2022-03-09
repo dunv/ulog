@@ -1,46 +1,46 @@
 package ulog
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestAddSkipFunctions(t *testing.T) {
+	setup(LEVEL_TRACE)
 
 	before := len(SkipFunctions())
 	AddSkipFunctions("a", "b", "c")
 	after := len(SkipFunctions())
 
 	if after-before != 3 {
-		t.Error(fmt.Errorf("did not add a,b,c correctly"))
+		t.Fatalf("did not add a,b,c correctly (before:%d after:%d)", before, after)
 	}
 
 	before = len(SkipFunctions())
 	AddSkipFunctions("a")
 	after = len(SkipFunctions())
 	if after-before != 0 {
-		t.Error(fmt.Errorf("did not add a correctly"))
+		t.Fatalf("did not add a,b,c correctly (before:%d after:%d)", before, after)
 	}
 
 	before = len(SkipFunctions())
 	AddSkipFunctions("b")
 	after = len(SkipFunctions())
 	if after-before != 0 {
-		t.Error(fmt.Errorf("did not add b correctly"))
+		t.Fatalf("did not add a,b,c correctly (before:%d after:%d)", before, after)
 	}
 
 	before = len(SkipFunctions())
 	AddSkipFunctions("c")
 	after = len(SkipFunctions())
 	if after-before != 0 {
-		t.Error(fmt.Errorf("did not add c correctly"))
+		t.Fatalf("did not add a,b,c correctly (before:%d after:%d)", before, after)
 	}
 
 	before = len(SkipFunctions())
 	AddSkipFunctions("a", "b", "c")
 	after = len(SkipFunctions())
 	if after-before != 0 {
-		t.Error(fmt.Errorf("did not add c correctly"))
+		t.Fatalf("did not add a,b,c correctly (before:%d after:%d)", before, after)
 	}
 
 }

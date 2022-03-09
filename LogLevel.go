@@ -1,6 +1,9 @@
 package ulog
 
-import "strings"
+import (
+	"strings"
+	"sync/atomic"
+)
 
 // LogLevel for the application
 type LogLevel int
@@ -34,16 +37,16 @@ func (l LogLevel) String() string {
 }
 
 // Set default logLevel
-var globalLogLevel LogLevel = LEVEL_INFO
+var globalLogLevel int32 = int32(LEVEL_INFO)
 
 // Get currently set logLevel
 func GetLogLevel() LogLevel {
-	return globalLogLevel
+	return LogLevel(atomic.LoadInt32(&globalLogLevel))
 }
 
 // Set logLevel
 func SetLogLevel(_level LogLevel) {
-	globalLogLevel = _level
+	atomic.StoreInt32(&globalLogLevel, int32(_level))
 }
 
 // Set logLevel from string

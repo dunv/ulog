@@ -9,6 +9,7 @@ import (
 )
 
 func setup(logLevel LogLevel) *bytes.Buffer {
+	ResetSkipFunctions()
 	ResetFormat()
 	ResetReplaceFunctions()
 	UnsetDebug()
