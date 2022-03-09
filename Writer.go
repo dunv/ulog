@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sync"
 )
+
+var writersLock = &sync.Mutex{}
 
 // keep track of multiple writers (for adding and replacing)
 var writers map[string]io.Writer = map[string]io.Writer{
@@ -14,6 +17,8 @@ var writers map[string]io.Writer = map[string]io.Writer{
 // Add or replace a writer
 // if name is nil the default writer will be replaced
 func SetWriter(_writer io.Writer, name *string) {
+	writersLock.Lock()
+	defer writersLock.Unlock()
 	if name != nil {
 		writers[*name] = _writer
 	} else {
@@ -24,6 +29,9 @@ func SetWriter(_writer io.Writer, name *string) {
 
 // Remove a writer
 func RemoveWriter(name string) error {
+	writersLock.Lock()
+	defer writersLock.Unlock()
+
 	if _, ok := writers[name]; ok {
 		delete(writers, name)
 		updateLogger()
