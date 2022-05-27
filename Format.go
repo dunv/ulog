@@ -1,18 +1,33 @@
 package ulog
 
 import (
+	"strings"
 	"text/template"
 )
 
-var origFmtString = "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}\n"
-var globalLineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(origFmtString))
+var colors = []string{
+	"{{ if eq .Level \"TRACE\" }}\033[90m{{ end }}",
+	"{{ if eq .Level \"DEBUG\" }}\033[34m{{ end }}",
+	"{{ if eq .Level \"INFO \" }}\033[97m{{ end }}",
+	"{{ if eq .Level \"WARN \" }}\033[95m{{ end }}",
+	"{{ if eq .Level \"ERROR\" }}\033[91m{{ end }}",
+	"{{ if eq .Level \"FATAL\" }}\033[93m{{ end }}",
+}
+var escape = "\033[39;49m"
+
+var origFmtString = "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}"
+var globalLineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(strings.Join(append(colors, origFmtString, escape), "")))
 var origTsFormat string = "2006-01-02 15:04:05.000"
 
 var globalTsFormat = origTsFormat
 
+func DisableColors() {
+	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(origFmtString))
+}
+
 // Use original logging format
 func ResetFormat() {
-	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(origFmtString))
+	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(strings.Join(append(colors, origFmtString, escape), "")))
 	globalTsFormat = origTsFormat
 }
 
