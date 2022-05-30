@@ -9,9 +9,9 @@ var colors = []string{
 	"{{ if eq .Level \"TRACE\" }}\033[90m{{ end }}",
 	"{{ if eq .Level \"DEBUG\" }}\033[34m{{ end }}",
 	"{{ if eq .Level \"INFO \" }}\033[97m{{ end }}",
-	"{{ if eq .Level \"WARN \" }}\033[95m{{ end }}",
+	"{{ if eq .Level \"WARN \" }}\033[93m{{ end }}",
 	"{{ if eq .Level \"ERROR\" }}\033[91m{{ end }}",
-	"{{ if eq .Level \"FATAL\" }}\033[93m{{ end }}",
+	"{{ if eq .Level \"FATAL\" }}\033[95m{{ end }}",
 }
 
 var coloredFmtString = strings.Join(append(colors, monochromeFmtString, "\033[0m"), "")
