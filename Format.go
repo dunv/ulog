@@ -13,21 +13,21 @@ var colors = []string{
 	"{{ if eq .Level \"ERROR\" }}\033[91m{{ end }}",
 	"{{ if eq .Level \"FATAL\" }}\033[93m{{ end }}",
 }
-var escape = "\033[39;49m"
+var escape = "\033[0m"
 
 var origFmtString = "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}"
-var globalLineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(strings.Join(append(colors, origFmtString, escape), "")))
+var globalLineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(origFmtString))
 var origTsFormat string = "2006-01-02 15:04:05.000"
 
 var globalTsFormat = origTsFormat
 
-func DisableColors() {
-	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(origFmtString))
+func EnableColors() {
+	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(strings.Join(append(colors, origFmtString, escape), "")))
 }
 
 // Use original logging format
 func ResetFormat() {
-	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(strings.Join(append(colors, origFmtString, escape), "")))
+	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(origFmtString))
 	globalTsFormat = origTsFormat
 }
 
