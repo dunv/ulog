@@ -13,22 +13,23 @@ var colors = []string{
 	"{{ if eq .Level \"ERROR\" }}\033[91m{{ end }}",
 	"{{ if eq .Level \"FATAL\" }}\033[93m{{ end }}",
 }
-var escape = "\033[0m"
 
-var origFmtString = "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}"
-var globalLineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(origFmtString))
-var origTsFormat string = "2006-01-02 15:04:05.000"
+var coloredFmtString = strings.Join(append(colors, monochromeFmtString, "\033[0m"), "")
+var monochromeFmtString = "{{ .Time }} | {{ .Level }} | {{ .Package }}{{ if .File }} {{ .File }}{{ end }}{{ if .Line }}:{{ .Line }}{{ end }}{{ if .Function }} ({{ .Function }}){{ end }} | {{ .Message }}"
+var tsFormatString string = "2006-01-02 15:04:05.000"
 
-var globalTsFormat = origTsFormat
+var globalLineTemplate *template.Template = template.Must(template.New("lineTemplate").Parse(monochromeFmtString))
+var globalTsFormat = tsFormatString
 
+// Use a format which colors lines according to logLevel
 func EnableColors() {
-	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(strings.Join(append(colors, origFmtString, escape), "")))
+	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(coloredFmtString))
 }
 
 // Use original logging format
 func ResetFormat() {
-	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(origFmtString))
-	globalTsFormat = origTsFormat
+	globalLineTemplate = template.Must(template.New("lineTemplate").Parse(monochromeFmtString))
+	globalTsFormat = tsFormatString
 }
 
 // Use custom logging format (using text/template)
