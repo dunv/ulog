@@ -2,10 +2,18 @@ package ulog
 
 import (
 	"fmt"
-	"path"
+	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 )
+
+var basePath string
+
+func init() {
+	f, _ := os.Getwd()
+	basePath = filepath.Dir(f)
+}
 
 // Helper function to select correct package, file, line and function for a logLine
 func meta() *LogEntry {
@@ -34,7 +42,18 @@ func meta() *LogEntry {
 
 	}
 
-	file := path.Base(fileRaw)
+	file, err := filepath.Rel(basePath, fileRaw)
+	if err != nil {
+		file = fileRaw
+	}
+	idx := strings.LastIndexByte(file, '/')
+	if idx != -1 {
+		idx = strings.LastIndexByte(file[:idx], '/')
+		if idx != -1 {
+			file = file[idx+1:]
+		}
+	}
+
 	packageEnd := strings.LastIndex(functionRaw, ".")
 	packageName := functionRaw[:packageEnd]
 	var functionName string
