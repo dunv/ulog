@@ -12,8 +12,14 @@ func S() *zap.SugaredLogger {
 	return zap.S()
 }
 
-func Trace(v ...interface{})                    { skipOneLogger.Trace(v...) }
-func Tracef(template string, v ...interface{})  { skipOneLogger.Tracef(template, v...) }
+func Trace(v ...interface{}) {
+	skipOneLogger.Warn("deprecated: TRACE")
+	skipOneLogger.Debug(v...)
+}
+func Tracef(template string, v ...interface{}) {
+	skipOneLogger.Warn("deprecated: TRACE")
+	skipOneLogger.Debugf(template, v...)
+}
 func Debug(v ...interface{})                    { skipOneLogger.Debug(v...) }
 func Debugf(template string, v ...interface{})  { skipOneLogger.Debugf(template, v...) }
 func Info(v ...interface{})                     { skipOneLogger.Info(v...) }

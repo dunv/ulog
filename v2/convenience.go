@@ -12,13 +12,6 @@ func LogIfError(err error) {
 	}
 }
 
-// Logs the error to TRACE-level if is not nil
-func TraceIfError(err error) {
-	if err != nil {
-		skipOneLogger.Trace(err)
-	}
-}
-
 // Logs the error to DEBUG-level if is not nil
 func DebugIfError(err error) {
 	if err != nil {
