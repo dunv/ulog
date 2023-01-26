@@ -1,0 +1,6 @@
+github.com/dunv/zap v0.0.0-20230126073219-88a02825332d h1:DkbnBmT2A6ek8Qi+FWvd1AgLcdkc+uGxxz2f4wU6MJw=
+github.com/dunv/zap v0.0.0-20230126073219-88a02825332d/go.mod h1:2kMP+WWQ8aoFoedH3T2sq6iJ2yDWpHbP0f6MQbS9Gkg=
+github.com/dunv/zap v1.0.24 h1:2Ja+PzvyrjLwmMmuwtoUpVyzLr5qG20TWPhmEvFWomo=
+github.com/dunv/zap v1.0.24/go.mod h1:UFlTQJqCT+83EcZeNx+mauUx4UC5UAxE9CM0tVPXCWI=
+github.com/dunv/zap v1.24.0-traceLevel.1 h1:ahAWkU9fIiDRDygPzMLPHEqysCPv099Dw9LHftwC0rA=
+github.com/dunv/zap v1.24.0-traceLevel.1/go.mod h1:2kMP+WWQ8aoFoedH3T2sq6iJ2yDWpHbP0f6MQbS9Gkg=
