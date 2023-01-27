@@ -56,7 +56,9 @@ func checkWithModifiedTemplate(buffer *bytes.Buffer, level logLevelString, msg s
 		t.Error(err)
 	}
 
-	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| n\/a \| github.com\/dunv\/ulog Format_test\.go:\d+ \(TestLoggingModifiedTemplate\) \| %s$`, level, msg))
+	regexString := fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| n\/a \| github.com\/dunv\/ulog ulog\/Format_test\.go:\d+ \(TestLoggingModifiedTemplate\) \| %s$`, level, msg)
+	re := regexp.MustCompile(regexString)
+
 	if !re.Match(res) {
 		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
 	}
@@ -68,7 +70,7 @@ func checkWithModifiedTime(buffer *bytes.Buffer, level logLevelString, msg strin
 		t.Error(err)
 	}
 
-	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d \| %s \| github.com\/dunv\/ulog Format_test\.go:\d+ \(TestLoggingModifiedTime\) \| %s$`, level, msg))
+	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d \| %s \| github.com\/dunv\/ulog ulog\/Format_test\.go:\d+ \(TestLoggingModifiedTime\) \| %s$`, level, msg))
 	if !re.Match(res) {
 		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
 	}

@@ -231,7 +231,7 @@ func check(buffer *bytes.Buffer, level logLevelString, msg string, t *testing.T)
 		t.Error(err)
 	}
 
-	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog ULogger_test\.go:\d+ \(TestLoggingHelpers\) \| %s$`, level, msg))
+	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog ulog\/ULogger_test\.go:\d+ \(TestLoggingHelpers\) \| %s$`, level, msg))
 	if !re.Match(res) {
 		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
 	}

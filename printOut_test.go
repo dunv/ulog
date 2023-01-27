@@ -26,7 +26,7 @@ func checkPrintOut(buffer *bytes.Buffer, level logLevelString, msg string, t *te
 		t.Error(err)
 	}
 
-	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog printOut_test\.go:\d+ \(TestPrintOut\) \| %s$`, level, msg))
+	var re = regexp.MustCompile(fmt.Sprintf(`(?m)^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d \| %s \| github.com\/dunv\/ulog ulog\/printOut_test\.go:\d+ \(TestPrintOut\) \| %s$`, level, msg))
 	if !re.Match(res) {
 		t.Errorf(`did not log the correct output actual: "%s"`, string(res))
 	}
