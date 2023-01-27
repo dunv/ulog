@@ -87,6 +87,10 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 	line.AppendString(c.separator)
 	appendPaddedLevel(ent.Level, line)
 	line.AppendString(c.separator)
+	if selectedOptions.renderDummyThread {
+		line.AppendString("n/a")
+		line.AppendString(c.separator)
+	}
 	appendCaller(ent.Caller, line)
 	line.AppendString(c.separator)
 	line.AppendString(ent.Message)

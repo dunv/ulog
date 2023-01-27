@@ -14,6 +14,7 @@ type options struct {
 	callerFieldWidth      int
 	isDevelopment         bool
 	stripAdditionalFields bool
+	renderDummyThread     bool
 }
 
 type funcOption struct {
@@ -55,5 +56,11 @@ func WithIsDevelopment(isDevelopment bool) Option {
 func WithStripAdditionalFields(stripAdditionalFields bool) Option {
 	return newFuncOption(func(o *options) {
 		o.stripAdditionalFields = stripAdditionalFields
+	})
+}
+
+func WithRenderDummyThread(renderDummyThread bool) Option {
+	return newFuncOption(func(o *options) {
+		o.renderDummyThread = renderDummyThread
 	})
 }

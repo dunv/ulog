@@ -12,6 +12,7 @@ var selectedOptions = options{
 	callerFieldWidth:      -1,
 	isDevelopment:         false,
 	stripAdditionalFields: true,
+	renderDummyThread:     false,
 }
 
 var skipOneLogger *zap.SugaredLogger
