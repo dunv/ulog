@@ -15,7 +15,8 @@ var selectedOptions = options{
 	renderDummyThread:     false,
 }
 
-var skipOneLogger *zap.SugaredLogger
+var skipOneSugaredLogger *zap.SugaredLogger
+var skipOneLogger *zap.Logger
 
 func init() {
 	reinit()
@@ -30,7 +31,8 @@ func reinit() {
 	}
 	logger := zap.New(core).WithOptions(opts...)
 	zap.ReplaceGlobals(logger)
-	skipOneLogger = zap.S().WithOptions(zap.AddCallerSkip(1))
+	skipOneSugaredLogger = zap.S().WithOptions(zap.AddCallerSkip(1))
+	skipOneLogger = zap.L().WithOptions(zap.AddCallerSkip(1))
 }
 
 func Configure(opts ...Option) {
