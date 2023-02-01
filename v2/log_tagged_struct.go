@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 // Helper function to log out a struct annotated with "env", "mask" and "warnIf" annotations
@@ -51,17 +53,19 @@ func logTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, 
 		}
 	}
 
+	logger := skipOneSugaredLogger.WithOptions(zap.AddCallerSkip(1))
+
 	if len(allWarnings) > 0 {
-		skipOneSugaredLogger.Warn("WARNINGS ..............................................................")
+		logger.Warn("WARNINGS ..............................................................")
 	}
 	for _, warning := range allWarnings {
-		skipOneSugaredLogger.Warn(warning)
+		logger.Warn(warning)
 	}
 	if len(allOutput) > 0 {
-		skipOneSugaredLogger.Info("Config ................................................................")
+		logger.Info("Config ................................................................")
 	}
 	for _, output := range allOutput {
-		skipOneSugaredLogger.Info(output)
+		logger.Info(output)
 	}
 }
 
