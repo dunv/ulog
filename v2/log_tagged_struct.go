@@ -11,18 +11,18 @@ import (
 // Helper function to log out a struct annotated with "env", "mask" and "warnIf" annotations
 // Good to use with the "github.com/codingconcepts/env" package
 func LogEnvStruct(envStruct interface{}, prefix string) {
-	LogTaggedStructWithMaskingAndWarning(envStruct, "env", "mask", "warnIf", prefix, true)
+	LogTaggedStructWithMaskingAndWarning(envStruct, "env", "mask", "warnIf", prefix, true, skipOneSugaredLogger.WithOptions(zap.AddCallerSkip(1)))
 }
 
 // Helper function to log out a struct annotated with "json", "mask" and "warnIf" annotations
 // Good to use with the "encoding/json" package
 func LogJSONStruct(envStruct interface{}, prefix string) {
-	LogTaggedStructWithMaskingAndWarning(envStruct, "json", "mask", "warnIf", prefix, false)
+	LogTaggedStructWithMaskingAndWarning(envStruct, "json", "mask", "warnIf", prefix, false, skipOneSugaredLogger.WithOptions(zap.AddCallerSkip(1)))
 }
 
 // Helper function to log out a struct
 // should only be used if LogEnvStruct() or LogJSONStruct() do not meet your requirements
-func LogTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string, printHeaders bool) {
+func LogTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string, printHeaders bool, logger *zap.SugaredLogger) {
 	// Dereference if needed
 	usedTaggedStruct := taggedStruct
 	if reflect.ValueOf(taggedStruct).Kind() == reflect.Ptr {
@@ -54,8 +54,6 @@ func LogTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, 
 			}
 		}
 	}
-
-	logger := skipOneSugaredLogger.WithOptions(zap.AddCallerSkip(1))
 
 	if printHeaders && len(allWarnings) > 0 {
 		logger.Warn("WARNINGS ..............................................................")
