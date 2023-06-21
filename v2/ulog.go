@@ -13,6 +13,7 @@ var selectedOptions = options{
 	isDevelopment:         false,
 	stripAdditionalFields: true,
 	renderDummyThread:     false,
+	redirectOutput:        os.Stdout,
 }
 
 var skipOneSugaredLogger *zap.SugaredLogger
@@ -24,7 +25,7 @@ func init() {
 
 func reinit() {
 	encoder := newCustomEncoder()
-	core := zapcore.NewCore(encoder, zapcore.AddSync(os.Stdout), selectedOptions.level)
+	core := zapcore.NewCore(encoder, zapcore.AddSync(selectedOptions.redirectOutput), selectedOptions.level)
 	opts := []zap.Option{zap.AddCaller()}
 	if selectedOptions.isDevelopment {
 		opts = append(opts, zap.Development())

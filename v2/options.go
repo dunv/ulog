@@ -1,6 +1,8 @@
 package v2
 
 import (
+	"io"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -15,6 +17,7 @@ type options struct {
 	isDevelopment         bool
 	stripAdditionalFields bool
 	renderDummyThread     bool
+	redirectOutput        io.Writer
 }
 
 type funcOption struct {
@@ -62,5 +65,11 @@ func WithStripAdditionalFields(stripAdditionalFields bool) Option {
 func WithRenderDummyThread(renderDummyThread bool) Option {
 	return newFuncOption(func(o *options) {
 		o.renderDummyThread = renderDummyThread
+	})
+}
+
+func WithRedirectOutput(w io.Writer) Option {
+	return newFuncOption(func(o *options) {
+		o.redirectOutput = w
 	})
 }
