@@ -7,66 +7,78 @@ import (
 
 var logger = log.New(os.Stdout, "", 0)
 
+// Deprecated: use v2
 func Trace(v ...interface{}) {
 	if GetLogLevel() <= LEVEL_TRACE {
 		printOut(nil, _LEVEL_TRACE, v...)
 	}
 }
 
+// Deprecated: use v2
 func Tracef(fmtString string, v ...interface{}) {
 	if GetLogLevel() <= LEVEL_TRACE {
 		printOut(&fmtString, _LEVEL_TRACE, v...)
 	}
 }
 
+// Deprecated: use v2
 func Debug(v ...interface{}) {
 	if GetLogLevel() <= LEVEL_DEBUG {
 		printOut(nil, _LEVEL_DEBUG, v...)
 	}
 
 }
+
+// Deprecated: use v2
 func Debugf(fmtString string, v ...interface{}) {
 	if GetLogLevel() <= LEVEL_DEBUG {
 		printOut(&fmtString, _LEVEL_DEBUG, v...)
 	}
 }
 
+// Deprecated: use v2
 func Info(v ...interface{}) {
 	if GetLogLevel() <= LEVEL_INFO {
 		printOut(nil, _LEVEL_INFO, v...)
 	}
 }
 
+// Deprecated: use v2
 func Infof(fmtString string, v ...interface{}) {
 	if GetLogLevel() <= LEVEL_INFO {
 		printOut(&fmtString, _LEVEL_INFO, v...)
 	}
 }
 
+// Deprecated: use v2
 func Warn(v ...interface{}) {
 	if GetLogLevel() <= LEVEL_WARNING {
 		printOut(nil, _LEVEL_WARNING, v...)
 	}
 }
 
+// Deprecated: use v2
 func Warnf(fmtString string, v ...interface{}) {
 	if GetLogLevel() <= LEVEL_WARNING {
 		printOut(&fmtString, _LEVEL_WARNING, v...)
 	}
 }
 
+// Deprecated: use v2
 func Error(v ...interface{}) {
 	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(nil, _LEVEL_ERROR, v...)
 	}
 }
 
+// Deprecated: use v2
 func Errorf(fmtString string, v ...interface{}) {
 	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(&fmtString, _LEVEL_ERROR, v...)
 	}
 }
 
+// Deprecated: use v2
 func Fatal(v ...interface{}) {
 	if GetLogLevel() <= LEVEL_FATAL {
 		printOut(nil, _LEVEL_FATAL, v...)
@@ -79,6 +91,7 @@ func Fatal(v ...interface{}) {
 	}
 }
 
+// Deprecated: use v2
 func Fatalf(fmtString string, v ...interface{}) {
 	if GetLogLevel() <= LEVEL_FATAL {
 		printOut(&fmtString, _LEVEL_FATAL, v...)
@@ -91,6 +104,7 @@ func Fatalf(fmtString string, v ...interface{}) {
 	}
 }
 
+// Deprecated: use v2
 func Panic(v interface{}) {
 	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(nil, _LEVEL_ERROR, v)
@@ -98,6 +112,7 @@ func Panic(v interface{}) {
 	panic(v)
 }
 
+// Deprecated: use v2
 func Panicf(fmtString string, v ...interface{}) {
 	if GetLogLevel() <= LEVEL_ERROR {
 		printOut(&fmtString, _LEVEL_ERROR, v...)
@@ -105,6 +120,7 @@ func Panicf(fmtString string, v ...interface{}) {
 	panic(v)
 }
 
+// Deprecated: use v2
 func LogWithLevel(level LogLevel, v ...interface{}) {
 	switch level {
 	case LEVEL_TRACE:
@@ -122,6 +138,7 @@ func LogWithLevel(level LogLevel, v ...interface{}) {
 	}
 }
 
+// Deprecated: use v2
 func LogWithLevelf(level LogLevel, fmtString string, v ...interface{}) {
 	switch level {
 	case LEVEL_TRACE:
