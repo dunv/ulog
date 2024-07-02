@@ -18,6 +18,7 @@ type options struct {
 	stripAdditionalFields bool
 	renderDummyThread     bool
 	redirectOutput        io.Writer
+	additionalCores       []zapcore.Core
 }
 
 type funcOption struct {
@@ -71,5 +72,11 @@ func WithRenderDummyThread(renderDummyThread bool) Option {
 func WithRedirectOutput(w io.Writer) Option {
 	return newFuncOption(func(o *options) {
 		o.redirectOutput = w
+	})
+}
+
+func WithAdditionalCores(cores ...zapcore.Core) Option {
+	return newFuncOption(func(o *options) {
+		o.additionalCores = cores
 	})
 }

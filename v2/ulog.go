@@ -30,6 +30,12 @@ func reinit() {
 	if selectedOptions.isDevelopment {
 		opts = append(opts, zap.Development())
 	}
+
+	if len(selectedOptions.additionalCores) > 0 {
+		cores := append([]zapcore.Core{core}, selectedOptions.additionalCores...)
+		core = zapcore.NewTee(cores...)
+	}
+
 	logger := zap.New(core).WithOptions(opts...)
 	zap.ReplaceGlobals(logger)
 	skipOneSugaredLogger = zap.S().WithOptions(zap.AddCallerSkip(1))
