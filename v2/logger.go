@@ -28,8 +28,8 @@ func (l Logger) Print(v ...interface{})                 { l.log.Info(v...) }
 func (l Logger) Printf(format string, v ...interface{}) { l.log.Infof(format, v...) }
 func (l Logger) Println(v ...interface{})               { l.log.Info(v...) }
 
-func (l Logger) Trace(v ...interface{})                    { l.log.Trace(v...) }
-func (l Logger) Tracef(template string, v ...interface{})  { l.log.Tracef(template, v...) }
+func (l Logger) Trace(v ...interface{})                    { l.log.Log(zap.TraceLevel, v...) }
+func (l Logger) Tracef(template string, v ...interface{})  { l.log.Logf(zap.TraceLevel, template, v...) }
 func (l Logger) Debug(v ...interface{})                    { l.log.Debug(v...) }
 func (l Logger) Debugf(template string, v ...interface{})  { l.log.Debugf(template, v...) }
 func (l Logger) Info(v ...interface{})                     { l.log.Info(v...) }

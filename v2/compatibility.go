@@ -24,8 +24,10 @@ func SkipOneS() *zap.SugaredLogger {
 func Log(lvl zapcore.Level, msg string, fields ...zapcore.Field) {
 	skipOneLogger.Log(lvl, msg, fields...)
 }
-func Trace(v ...interface{})                    { skipOneSugaredLogger.Trace(v...) }
-func Tracef(template string, v ...interface{})  { skipOneSugaredLogger.Tracef(template, v...) }
+func Trace(v ...interface{}) { skipOneSugaredLogger.Log(zap.TraceLevel, v...) }
+func Tracef(template string, v ...interface{}) {
+	skipOneSugaredLogger.Logf(zap.TraceLevel, template, v...)
+}
 func Debug(v ...interface{})                    { skipOneSugaredLogger.Debug(v...) }
 func Debugf(template string, v ...interface{})  { skipOneSugaredLogger.Debugf(template, v...) }
 func Info(v ...interface{})                     { skipOneSugaredLogger.Info(v...) }

@@ -3,6 +3,8 @@ package v2
 import (
 	"bufio"
 	"bytes"
+
+	"go.uber.org/zap"
 )
 
 // Logs the error to ERROR-level if it is not nil
@@ -15,7 +17,7 @@ func LogIfError(err error) {
 // Logs the error to TRACE-level if is not nil
 func TraceIfError(err error) {
 	if err != nil {
-		skipOneSugaredLogger.Trace(err)
+		skipOneSugaredLogger.Log(zap.TraceLevel, err)
 	}
 }
 
