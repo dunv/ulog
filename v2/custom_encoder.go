@@ -10,25 +10,36 @@ import (
 )
 
 const (
-	color_json    string = "\033[90m"
-	color_trace   string = "\033[90m"
-	color_debug   string = "\033[34m"
-	color_warning string = "\033[93m"
-	color_error   string = "\033[91m"
-	color_fatal   string = "\033[95m"
-	color_end     string = "\033[0m"
+	colorJson    string = "\033[90m"
+	colorTrace   string = "\033[90m"
+	colorDebug   string = "\033[34m"
+	colorWarning string = "\033[93m"
+	colorError   string = "\033[91m"
+	colorFatal   string = "\033[95m"
+	colorEnd     string = "\033[0m"
+	timeFormat          = time.RFC3339
 )
 
 var (
-	levelToColorStart = map[zapcore.Level]string{
-		zapcore.TraceLevel:  color_trace,
-		zapcore.DebugLevel:  color_debug,
-		zapcore.InfoLevel:   "",
-		zapcore.WarnLevel:   color_warning,
-		zapcore.ErrorLevel:  color_error,
-		zapcore.DPanicLevel: color_fatal,
-		zapcore.PanicLevel:  color_fatal,
-		zapcore.FatalLevel:  color_fatal,
+	levelToColorStart = map[zapcore.Level][]byte{
+		zapcore.TraceLevel:  []byte(colorTrace),
+		zapcore.DebugLevel:  []byte(colorDebug),
+		zapcore.InfoLevel:   nil,
+		zapcore.WarnLevel:   []byte(colorWarning),
+		zapcore.ErrorLevel:  []byte(colorError),
+		zapcore.DPanicLevel: []byte(colorFatal),
+		zapcore.PanicLevel:  []byte(colorFatal),
+		zapcore.FatalLevel:  []byte(colorFatal),
+	}
+	levelToColorEnd = map[zapcore.Level][]byte{
+		zapcore.TraceLevel:  []byte(colorEnd),
+		zapcore.DebugLevel:  []byte(colorEnd),
+		zapcore.InfoLevel:   nil,
+		zapcore.WarnLevel:   []byte(colorEnd),
+		zapcore.ErrorLevel:  []byte(colorEnd),
+		zapcore.DPanicLevel: []byte(colorEnd),
+		zapcore.PanicLevel:  []byte(colorEnd),
+		zapcore.FatalLevel:  []byte(colorEnd),
 	}
 	levelString     = make(map[zapcore.Level]string, len(levelToColorStart))
 	levelFieldWidth int
@@ -60,7 +71,7 @@ func newCustomEncoder() zapcore.Encoder {
 		MessageKey:     "message",
 		StacktraceKey:  "stacktrace",
 		EncodeLevel:    zapcore.CapitalLevelEncoder,
-		EncodeTime:     zapcore.TimeEncoderOfLayout(time.RFC3339),
+		EncodeTime:     zapcore.TimeEncoderOfLayout(timeFormat),
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
@@ -80,10 +91,8 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 	line := c.bufferpool.Get()
 
 	// Coloring
-	if s, ok := levelToColorStart[ent.Level]; ok {
-		line.AppendString(s)
-	}
-	line.AppendString(ent.Time.Format(time.RFC3339))
+	line.AppendBytes(levelToColorStart[ent.Level])
+	line.AppendString(ent.Time.Format(timeFormat))
 	line.AppendString(c.separator)
 	appendPaddedLevel(ent.Level, line)
 	line.AppendString(c.separator)
@@ -97,11 +106,11 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 
 	if !selectedOptions.stripAdditionalFields {
 		line.AppendString(c.separator)
-		line.AppendString(color_json)
+		line.AppendString(colorJson)
 		buf, _ := c.Encoder.EncodeEntry(ent, fields)
 		_, _ = line.Write(buf.Bytes()[:len(buf.Bytes())-1])
 		buf.Free()
-		line.AppendString(color_end)
+		line.AppendString(colorEnd)
 	}
 
 	if ent.Stack != "" {
@@ -110,9 +119,7 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 	}
 
 	// Coloring
-	if _, ok := levelToColorStart[ent.Level]; ok {
-		line.AppendString(color_end)
-	}
+	line.AppendBytes(levelToColorEnd[ent.Level])
 	line.AppendString(zapcore.DefaultLineEnding)
 
 	return line, nil

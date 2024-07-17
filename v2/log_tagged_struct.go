@@ -22,7 +22,10 @@ func LogJSONStruct(envStruct interface{}, prefix string) {
 
 // Helper function to log out a struct
 // should only be used if LogEnvStruct() or LogJSONStruct() do not meet your requirements
-func LogTaggedStructWithMaskingAndWarning(taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string, printHeaders bool, logger *zap.SugaredLogger) {
+func LogTaggedStructWithMaskingAndWarning(
+	taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string, printHeaders bool,
+	logger *zap.SugaredLogger,
+) {
 	// Dereference if needed
 	usedTaggedStruct := taggedStruct
 	if reflect.ValueOf(taggedStruct).Kind() == reflect.Ptr {
