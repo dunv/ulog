@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dunv/ulog/v2/otel/otelzap"
+	"github.com/dunv/ulog/otel/otelzap"
 	"go.opentelemetry.io/otel/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

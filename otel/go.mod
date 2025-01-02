@@ -1,4 +1,4 @@
-module github.com/dunv/ulog/v2/otel
+module github.com/dunv/ulog/otel
 
 go 1.23.2
 
