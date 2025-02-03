@@ -102,7 +102,12 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 	}
 	appendCaller(ent.Caller, line)
 	line.AppendString(c.separator)
-	line.AppendString(ent.Message)
+
+	if selectedOptions.replaceNewlines {
+		line.AppendString(strings.ReplaceAll(ent.Message, "\n", selectedOptions.newlineReplacement))
+	} else {
+		line.AppendString(ent.Message)
+	}
 
 	if !selectedOptions.stripAdditionalFields {
 		line.AppendString(c.separator)

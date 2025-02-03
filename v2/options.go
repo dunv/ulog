@@ -17,6 +17,8 @@ type options struct {
 	isDevelopment         bool
 	stripAdditionalFields bool
 	renderDummyThread     bool
+	replaceNewlines       bool
+	newlineReplacement    string
 	redirectOutput        io.Writer
 	additionalCores       []zapcore.Core
 }
@@ -66,6 +68,13 @@ func WithStripAdditionalFields(stripAdditionalFields bool) Option {
 func WithRenderDummyThread(renderDummyThread bool) Option {
 	return newFuncOption(func(o *options) {
 		o.renderDummyThread = renderDummyThread
+	})
+}
+
+func WithNewlineReplacement(newlineReplacement string) Option {
+	return newFuncOption(func(o *options) {
+		o.replaceNewlines = true
+		o.newlineReplacement = newlineReplacement
 	})
 }
 
