@@ -1,4 +1,4 @@
-module github.com/dunv/ulog/v2
+module github.com/dunv/ulog
 
 go 1.22
 
