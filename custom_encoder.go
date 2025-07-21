@@ -11,8 +11,7 @@ import (
 
 const (
 	colorJson    string = "\033[90m"
-	colorTrace   string = "\033[90m"
-	colorDebug   string = "\033[34m"
+	colorDebug   string = "\033[90m"
 	colorWarning string = "\033[93m"
 	colorError   string = "\033[91m"
 	colorFatal   string = "\033[95m"
@@ -22,7 +21,6 @@ const (
 
 var (
 	levelToColorStart = map[zapcore.Level][]byte{
-		zapcore.TraceLevel:  []byte(colorTrace),
 		zapcore.DebugLevel:  []byte(colorDebug),
 		zapcore.InfoLevel:   nil,
 		zapcore.WarnLevel:   []byte(colorWarning),
@@ -32,7 +30,6 @@ var (
 		zapcore.FatalLevel:  []byte(colorFatal),
 	}
 	levelToColorEnd = map[zapcore.Level][]byte{
-		zapcore.TraceLevel:  []byte(colorEnd),
 		zapcore.DebugLevel:  []byte(colorEnd),
 		zapcore.InfoLevel:   nil,
 		zapcore.WarnLevel:   []byte(colorEnd),

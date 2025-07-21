@@ -1,6 +1,6 @@
-module github.com/dunv/ulog/v2
+module github.com/dunv/ulog/v3
 
-go 1.22
+go 1.24
 
 require (
 	github.com/stretchr/testify v1.10.0
@@ -13,5 +13,3 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace go.uber.org/zap v1.27.0 => github.com/dunv/zap v1.27.0-traceLevel.2

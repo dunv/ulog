@@ -1,14 +1,5 @@
 package ulog
 
-import "go.uber.org/zap"
-
-type TraceWriter struct{}
-
-func (TraceWriter) Write(p []byte) (int, error) {
-	skipOneSugaredLogger.Log(zap.TraceLevel, string(p))
-	return len(p), nil
-}
-
 type DebugWriter struct{}
 
 func (DebugWriter) Write(p []byte) (int, error) {

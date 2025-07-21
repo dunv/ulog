@@ -3,21 +3,12 @@ package ulog
 import (
 	"bufio"
 	"bytes"
-
-	"go.uber.org/zap"
 )
 
 // Logs the error to ERROR-level if it is not nil
 func LogIfError(err error) {
 	if err != nil {
 		skipOneSugaredLogger.Error(err)
-	}
-}
-
-// Logs the error to TRACE-level if is not nil
-func TraceIfError(err error) {
-	if err != nil {
-		skipOneSugaredLogger.Log(zap.TraceLevel, err)
 	}
 }
 
@@ -57,7 +48,7 @@ func PanicIfError(err error) {
 }
 
 // Logs if error received as second argument to ERROR-level is not nil (first argument is discarded)
-func LogIfErrorSecondArg(input interface{}, err error) interface{} {
+func LogIfErrorSecondArg(input any, err error) any {
 	if err != nil {
 		skipOneSugaredLogger.Error(err)
 		return input
@@ -66,7 +57,7 @@ func LogIfErrorSecondArg(input interface{}, err error) interface{} {
 }
 
 // Logs if error received as second argument to FATAL-level (and panicking after) is not nil (first argument is discarded)
-func FatalIfErrorSecondArg(input interface{}, err error) interface{} {
+func FatalIfErrorSecondArg(input any, err error) any {
 	if err != nil {
 		skipOneSugaredLogger.Fatal(err)
 		return input
@@ -75,7 +66,7 @@ func FatalIfErrorSecondArg(input interface{}, err error) interface{} {
 }
 
 // Logs if error received as second argument to PANIC-level (and panicking after) is not nil (first argument is discarded)
-func PanicIfErrorSecondArg(input interface{}, err error) interface{} {
+func PanicIfErrorSecondArg(input any, err error) any {
 	if err != nil {
 		skipOneSugaredLogger.Panic(err)
 		return input
@@ -91,7 +82,7 @@ func LogIfErrorToInfo(err error) {
 }
 
 // Logs if error received as second argument to INFO-level is not nil (first argument is discarded)
-func LogIfErrorToInfoSecondArg(_ interface{}, err error) {
+func LogIfErrorToInfoSecondArg(_ any, err error) {
 	if err != nil {
 		skipOneSugaredLogger.Info(err)
 	}
@@ -118,7 +109,7 @@ func LogByteArrayLineByLineToDebug(in []byte, prefix ...string) {
 }
 
 // Logs a byteArray line by line
-func LogByteArrayLineByLine(in []byte, f func(string, ...interface{}), prefix ...string) {
+func LogByteArrayLineByLine(in []byte, f func(string, ...any), prefix ...string) {
 	bufReader := bufio.NewReader(bytes.NewReader(in))
 	for {
 		line, _, err := bufReader.ReadLine()

@@ -11,7 +11,7 @@ import (
 func TestLogStruct(t *testing.T) {
 	b := bytes.NewBuffer([]byte{})
 	Configure(
-		WithLogLevel("trace"),
+		WithLogLevel("debug"),
 		WithRedirectOutput(b),
 	)
 
@@ -20,18 +20,6 @@ func TestLogStruct(t *testing.T) {
 		World string
 	}
 
-	t.Run("to trace", func(t *testing.T) {
-		s := myStruct{
-			Hello: "hello",
-			World: "world",
-		}
-		TraceStruct(s, "\t")
-		lines := lines(t, b)
-		require.Len(t, lines, 2)
-		requireMsgEquals(t, lines[0], zapcore.TraceLevel, "\tHello = hello")
-		requireMsgEquals(t, lines[1], zapcore.TraceLevel, "\tWorld = world")
-		b.Reset()
-	})
 	t.Run("to debug", func(t *testing.T) {
 		s := myStruct{
 			Hello: "hello",

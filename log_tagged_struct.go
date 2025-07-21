@@ -10,20 +10,20 @@ import (
 
 // Helper function to log out a struct annotated with "env", "mask" and "warnIf" annotations
 // Good to use with the "github.com/codingconcepts/env" package
-func LogEnvStruct(envStruct interface{}, prefix string) {
+func LogEnvStruct(envStruct any, prefix string) {
 	LogTaggedStructWithMaskingAndWarning(envStruct, "env", "mask", "warnIf", prefix, true, skipOneSugaredLogger.WithOptions(zap.AddCallerSkip(1)))
 }
 
 // Helper function to log out a struct annotated with "json", "mask" and "warnIf" annotations
 // Good to use with the "encoding/json" package
-func LogJSONStruct(envStruct interface{}, prefix string) {
+func LogJSONStruct(envStruct any, prefix string) {
 	LogTaggedStructWithMaskingAndWarning(envStruct, "json", "mask", "warnIf", prefix, false, skipOneSugaredLogger.WithOptions(zap.AddCallerSkip(1)))
 }
 
 // Helper function to log out a struct
 // should only be used if LogEnvStruct() or LogJSONStruct() do not meet your requirements
 func LogTaggedStructWithMaskingAndWarning(
-	taggedStruct interface{}, tag string, maskTag string, warnTag string, prefix string, printHeaders bool,
+	taggedStruct any, tag string, maskTag string, warnTag string, prefix string, printHeaders bool,
 	logger *zap.SugaredLogger,
 ) {
 	// Dereference if needed

@@ -24,21 +24,21 @@ func SkipOneS() *zap.SugaredLogger {
 func Log(lvl zapcore.Level, msg string, fields ...zapcore.Field) {
 	skipOneLogger.Log(lvl, msg, fields...)
 }
-func Trace(v ...interface{}) { skipOneSugaredLogger.Log(zap.TraceLevel, v...) }
-func Tracef(template string, v ...interface{}) {
-	skipOneSugaredLogger.Logf(zap.TraceLevel, template, v...)
+func Debug(v ...any)                    { skipOneSugaredLogger.Debug(v...) }
+func Debugf(template string, v ...any)  { skipOneSugaredLogger.Debugf(template, v...) }
+func Info(v ...any)                     { skipOneSugaredLogger.Info(v...) }
+func Infof(template string, v ...any)   { skipOneSugaredLogger.Infof(template, v...) }
+func Warn(v ...any)                     { skipOneSugaredLogger.Warn(v...) }
+func Warnf(template string, v ...any)   { skipOneSugaredLogger.Warnf(template, v...) }
+func Error(v ...any)                    { skipOneSugaredLogger.Error(v...) }
+func Errorf(template string, v ...any)  { skipOneSugaredLogger.Errorf(template, v...) }
+func Fatal(v ...any)                    { skipOneSugaredLogger.Fatal(v...) }
+func Fatalf(template string, v ...any)  { skipOneSugaredLogger.Fatalf(template, v...) }
+func DPanic(v ...any)                   { skipOneSugaredLogger.DPanic(v...) }
+func DPanicf(template string, v ...any) { skipOneSugaredLogger.DPanicf(template, v...) }
+func Panic(v ...any)                    { skipOneSugaredLogger.Panic(v...) }
+func Panicf(template string, v ...any)  { skipOneSugaredLogger.Panicf(template, v...) }
+
+func With(args ...any) *zap.SugaredLogger {
+	return skipOneSugaredLogger.With(args...)
 }
-func Debug(v ...interface{})                    { skipOneSugaredLogger.Debug(v...) }
-func Debugf(template string, v ...interface{})  { skipOneSugaredLogger.Debugf(template, v...) }
-func Info(v ...interface{})                     { skipOneSugaredLogger.Info(v...) }
-func Infof(template string, v ...interface{})   { skipOneSugaredLogger.Infof(template, v...) }
-func Warn(v ...interface{})                     { skipOneSugaredLogger.Warn(v...) }
-func Warnf(template string, v ...interface{})   { skipOneSugaredLogger.Warnf(template, v...) }
-func Error(v ...interface{})                    { skipOneSugaredLogger.Error(v...) }
-func Errorf(template string, v ...interface{})  { skipOneSugaredLogger.Errorf(template, v...) }
-func Fatal(v ...interface{})                    { skipOneSugaredLogger.Fatal(v...) }
-func Fatalf(template string, v ...interface{})  { skipOneSugaredLogger.Fatalf(template, v...) }
-func DPanic(v ...interface{})                   { skipOneSugaredLogger.DPanic(v...) }
-func DPanicf(template string, v ...interface{}) { skipOneSugaredLogger.DPanicf(template, v...) }
-func Panic(v ...interface{})                    { skipOneSugaredLogger.Panic(v...) }
-func Panicf(template string, v ...interface{})  { skipOneSugaredLogger.Panicf(template, v...) }
