@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	colorJson    string = "\033[38:5:236m"
+	colorJson    string = "\033[38:5:237m"
 	colorDebug   string = "\033[90m"
 	colorWarning string = "\033[93m"
 	colorError   string = "\033[91m"
