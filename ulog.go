@@ -7,44 +7,41 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var selectedOptions = options{
-	level:                 zap.NewAtomicLevelAt(zapcore.InfoLevel),
-	callerFieldWidth:      -1,
-	isDevelopment:         false,
-	stripAdditionalFields: true,
-	renderDummyThread:     false,
-	redirectOutput:        os.Stdout,
-}
-
-var skipOneSugaredLogger *zap.SugaredLogger
-var skipOneLogger *zap.Logger
-
-func init() {
-	reinit()
-}
-
-func reinit() {
-	encoder := newCustomEncoder()
-	core := zapcore.NewCore(encoder, zapcore.AddSync(selectedOptions.redirectOutput), selectedOptions.level)
-	opts := []zap.Option{zap.AddCaller()}
-	if selectedOptions.isDevelopment {
-		opts = append(opts, zap.Development())
+func Configure(o ...Option) {
+	opts := options{
+		level:                 zap.NewAtomicLevelAt(zapcore.InfoLevel),
+		callerFieldWidth:      -1,
+		stripAdditionalFields: true,
+		renderDummyThread:     false,
+		replaceNewlines:       false,
+		newlineReplacement:    "",
+		redirectOutput:        os.Stdout,
+		redirectErr:           os.Stderr,
+		additionalCores:       nil,
 	}
 
-	if len(selectedOptions.additionalCores) > 0 {
-		cores := append([]zapcore.Core{core}, selectedOptions.additionalCores...)
+	for _, opt := range o {
+		opt.apply(&opts)
+	}
+	encoder := newCustomEncoder(opts)
+	sink := zapcore.AddSync(opts.redirectOutput)
+	core := zapcore.NewCore(encoder, sink, opts.level)
+
+	zapOpts := []zap.Option{
+		zap.ErrorOutput(zapcore.AddSync(opts.redirectErr)),
+		zap.AddCaller(),
+	}
+
+	if len(opts.additionalCores) > 0 {
+		cores := append([]zapcore.Core{core}, opts.additionalCores...)
 		core = zapcore.NewTee(cores...)
 	}
 
-	logger := zap.New(core).WithOptions(opts...)
+	logger := zap.New(core, zapOpts...)
 	zap.ReplaceGlobals(logger)
-	skipOneSugaredLogger = zap.S().WithOptions(zap.AddCallerSkip(1))
-	skipOneLogger = zap.L().WithOptions(zap.AddCallerSkip(1))
-}
 
-func Configure(opts ...Option) {
-	for _, opt := range opts {
-		opt.apply(&selectedOptions)
-	}
-	reinit()
+	_globalMu.Lock()
+	_globalL = zap.L().WithOptions(zap.AddCallerSkip(1))
+	_globalS = _globalL.Sugar()
+	_globalMu.Unlock()
 }

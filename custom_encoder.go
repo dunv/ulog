@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	colorJson    string = "\033[90m"
+	colorJson    string = "\033[38:5:236m"
 	colorDebug   string = "\033[90m"
 	colorWarning string = "\033[93m"
 	colorError   string = "\033[91m"
@@ -42,6 +42,8 @@ var (
 	levelFieldWidth int
 )
 
+var _pool = buffer.NewPool()
+
 func init() {
 	for level := range levelToColorStart {
 		lvlStr := level.CapitalString()
@@ -52,72 +54,86 @@ func init() {
 	}
 }
 
+// All other methods for adding fields are exposed through zapcore.Encoder interface,
 type customEncoder struct {
 	zapcore.Encoder
-	separator  string
-	bufferpool buffer.Pool
+	cfg  zapcore.EncoderConfig
+	opts options
 }
 
-func newCustomEncoder() zapcore.Encoder {
-	cfg := zapcore.EncoderConfig{
-		TimeKey:        "time",
-		LevelKey:       "level",
-		NameKey:        "loggerName",
-		CallerKey:      "location",
-		FunctionKey:    "function",
-		MessageKey:     "message",
-		StacktraceKey:  "stacktrace",
-		EncodeLevel:    zapcore.CapitalLevelEncoder,
-		EncodeTime:     zapcore.TimeEncoderOfLayout(timeFormat),
-		EncodeDuration: zapcore.StringDurationEncoder,
-		EncodeCaller:   zapcore.ShortCallerEncoder,
+func newCustomEncoder(opts options) zapcore.Encoder {
+	// use empty keys to avoid rendering them in the output
+	jsonEncoderCfg := zapcore.EncoderConfig{
+		TimeKey:          "",
+		LevelKey:         "",
+		NameKey:          "",
+		CallerKey:        "",
+		FunctionKey:      "",
+		MessageKey:       "",
+		StacktraceKey:    "",
+		SkipLineEnding:   true,
+		ConsoleSeparator: " | ",
+		EncodeLevel:      zapcore.CapitalLevelEncoder,
+		EncodeTime:       zapcore.TimeEncoderOfLayout(timeFormat),
+		EncodeDuration:   zapcore.StringDurationEncoder,
+		EncodeCaller:     zapcore.ShortCallerEncoder,
 	}
 
-	return customEncoder{
-		Encoder:    zapcore.NewJSONEncoder(cfg),
-		separator:  " | ",
-		bufferpool: buffer.NewPool(),
+	return &customEncoder{
+		zapcore.NewJSONEncoder(jsonEncoderCfg),
+		jsonEncoderCfg,
+		opts,
 	}
 }
 
 func (c customEncoder) Clone() zapcore.Encoder {
-	return customEncoder{Encoder: c.Encoder.Clone()}
+	return &customEncoder{
+		c.Encoder.Clone(),
+		c.cfg,
+		c.opts,
+	}
 }
 
 func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*buffer.Buffer, error) {
-	line := c.bufferpool.Get()
+	line := _pool.Get()
 
 	// Coloring
 	line.AppendBytes(levelToColorStart[ent.Level])
 	line.AppendString(ent.Time.Format(timeFormat))
-	line.AppendString(c.separator)
-	appendPaddedLevel(ent.Level, line)
-	line.AppendString(c.separator)
-	if selectedOptions.renderDummyThread {
+	line.AppendString(c.cfg.ConsoleSeparator)
+	c.appendPaddedLevel(ent.Level, line)
+	line.AppendString(c.cfg.ConsoleSeparator)
+	if c.opts.renderDummyThread {
 		line.AppendString("n/a")
-		line.AppendString(c.separator)
+		line.AppendString(c.cfg.ConsoleSeparator)
 	}
-	appendCaller(ent.Caller, line)
-	line.AppendString(c.separator)
+	c.appendCaller(ent.Caller, line)
+	line.AppendString(c.cfg.ConsoleSeparator)
 
-	if selectedOptions.replaceNewlines {
-		line.AppendString(strings.ReplaceAll(ent.Message, "\n", selectedOptions.newlineReplacement))
+	if c.opts.replaceNewlines {
+		line.AppendString(strings.ReplaceAll(ent.Message, "\n", c.opts.newlineReplacement))
 	} else {
 		line.AppendString(ent.Message)
 	}
 
-	if !selectedOptions.stripAdditionalFields {
-		line.AppendString(c.separator)
-		line.AppendString(colorJson)
+	// cannot check for field-presence here: if log.With is used, the fields will be added
+	// BEFORE EncodeEntry is called with zero fields
+	if !c.opts.stripAdditionalFields {
+		// "Abuse" zapcore's jsonEncoder to render fields
 		buf, _ := c.Encoder.EncodeEntry(ent, fields)
-		_, _ = line.Write(buf.Bytes()[:len(buf.Bytes())-1])
+		if buf.Len() > 2 { // len() == 2 means only "{}" was written, no fields
+			line.AppendString(colorJson)
+			line.AppendString(c.cfg.ConsoleSeparator)
+			_, _ = line.Write(buf.Bytes())
+			line.AppendString(colorEnd)
+		} else {
+			line.AppendBytes(levelToColorEnd[ent.Level])
+		}
 		buf.Free()
-		line.AppendString(colorEnd)
-	}
+		line.AppendString(zapcore.DefaultLineEnding)
 
-	if ent.Stack != "" {
-		line.AppendByte('\n')
-		line.AppendString(ent.Stack)
+		// return here, so we do not have to remember if json was added or not
+		return line, nil
 	}
 
 	// Coloring
@@ -127,14 +143,14 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 	return line, nil
 }
 
-var appendPaddedLevel = func(l zapcore.Level, enc *buffer.Buffer) {
+func (c *customEncoder) appendPaddedLevel(l zapcore.Level, enc *buffer.Buffer) {
 	if s, ok := levelString[l]; ok {
 		enc.AppendString(s)
 	}
 }
 
 // copied from zapcore with constant width
-var appendCaller = func(caller zapcore.EntryCaller, enc *buffer.Buffer) {
+func (c *customEncoder) appendCaller(caller zapcore.EntryCaller, enc *buffer.Buffer) {
 	if !caller.Defined {
 		enc.AppendString("caller undefined")
 		return
@@ -154,11 +170,11 @@ var appendCaller = func(caller zapcore.EntryCaller, enc *buffer.Buffer) {
 	// Keep everything after the penultimate separator.
 	str := fmt.Sprintf("%s:%d", caller.File[idx+1:], caller.Line)
 	// Pad or cut
-	if selectedOptions.callerFieldWidth != -1 {
-		if len(str) > selectedOptions.callerFieldWidth {
-			str = str[len(str)-selectedOptions.callerFieldWidth:]
+	if c.opts.callerFieldWidth != -1 {
+		if len(str) > c.opts.callerFieldWidth {
+			str = str[len(str)-c.opts.callerFieldWidth:]
 		} else {
-			str = str + strings.Repeat(" ", selectedOptions.callerFieldWidth-len(str))
+			str = str + strings.Repeat(" ", c.opts.callerFieldWidth-len(str))
 		}
 	}
 	enc.AppendString(str)

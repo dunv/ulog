@@ -14,12 +14,12 @@ type Option interface {
 type options struct {
 	level                 zap.AtomicLevel
 	callerFieldWidth      int
-	isDevelopment         bool
 	stripAdditionalFields bool
 	renderDummyThread     bool
 	replaceNewlines       bool
 	newlineReplacement    string
 	redirectOutput        io.Writer
+	redirectErr           io.Writer
 	additionalCores       []zapcore.Core
 }
 
@@ -35,6 +35,7 @@ func newFuncOption(f func(*options)) *funcOption {
 	return &funcOption{f: f}
 }
 
+// Default: info
 func WithLogLevel(lvl string) Option {
 	return newFuncOption(func(o *options) {
 		level, err := zap.ParseAtomicLevel(lvl)
@@ -47,30 +48,21 @@ func WithLogLevel(lvl string) Option {
 	})
 }
 
+// Default: -1 (no width)
 func WithCallerFieldWidth(fieldWidth int) Option {
 	return newFuncOption(func(o *options) {
 		o.callerFieldWidth = fieldWidth
 	})
 }
 
-func WithIsDevelopment(isDevelopment bool) Option {
-	return newFuncOption(func(o *options) {
-		o.isDevelopment = isDevelopment
-	})
-}
-
+// Default: true
 func WithStripAdditionalFields(stripAdditionalFields bool) Option {
 	return newFuncOption(func(o *options) {
 		o.stripAdditionalFields = stripAdditionalFields
 	})
 }
 
-func WithRenderDummyThread(renderDummyThread bool) Option {
-	return newFuncOption(func(o *options) {
-		o.renderDummyThread = renderDummyThread
-	})
-}
-
+// Default: ""
 func WithNewlineReplacement(newlineReplacement string) Option {
 	return newFuncOption(func(o *options) {
 		o.replaceNewlines = true
@@ -78,12 +70,14 @@ func WithNewlineReplacement(newlineReplacement string) Option {
 	})
 }
 
+// Default: os.Stdout
 func WithRedirectOutput(w io.Writer) Option {
 	return newFuncOption(func(o *options) {
 		o.redirectOutput = w
 	})
 }
 
+// Default: nil
 func WithAdditionalCores(cores ...zapcore.Core) Option {
 	return newFuncOption(func(o *options) {
 		o.additionalCores = cores

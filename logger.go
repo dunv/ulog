@@ -12,7 +12,7 @@ type Logger struct {
 
 func NewDefaultLogger() Logger {
 	return Logger{
-		log: skipOneSugaredLogger,
+		log: SkipOneS(),
 	}
 }
 

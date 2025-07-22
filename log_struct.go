@@ -36,7 +36,7 @@ func logStruct(lvl zapcore.Level, taggedStruct any, prefix string) {
 
 	typeOf := reflect.TypeOf(usedTaggedStruct)
 	valueOf := reflect.ValueOf(usedTaggedStruct)
-	logger := skipOneSugaredLogger.WithOptions(zap.AddCallerSkip(1))
+	logger := SkipOneS().WithOptions(zap.AddCallerSkip(1))
 
 	for i := 0; i < valueOf.NumField(); i++ {
 		derefFieldVal := valueOf.Field(i)
