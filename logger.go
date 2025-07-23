@@ -2,6 +2,7 @@ package ulog
 
 import (
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // convenience for passing the logger to third-party libs
@@ -42,3 +43,11 @@ func (l Logger) DPanic(v ...any)                   { l.log.DPanic(v...) }
 func (l Logger) DPanicf(template string, v ...any) { l.log.DPanicf(template, v...) }
 func (l Logger) Panic(v ...any)                    { l.log.Panic(v...) }
 func (l Logger) Panicf(template string, v ...any)  { l.log.Panicf(template, v...) }
+
+func (l Logger) Log(lvl zapcore.Level, args ...any) { l.log.Log(lvl, args...) }
+func (l Logger) Logf(lvl zapcore.Level, template string, args ...any) {
+	l.log.Logf(lvl, template, args...)
+}
+func (l Logger) Logw(lvl zapcore.Level, msg string, keysAndValues ...any) {
+	l.log.Logw(lvl, msg, keysAndValues...)
+}
