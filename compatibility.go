@@ -35,8 +35,12 @@ func S() *zap.SugaredLogger {
 	return zap.S()
 }
 
-func Log(lvl zapcore.Level, msg string, fields ...zapcore.Field) {
-	SkipOneL().Log(lvl, msg, fields...)
+func Log(lvl zapcore.Level, args ...any) { SkipOneS().Log(lvl, args...) }
+func Logf(lvl zapcore.Level, template string, args ...any) {
+	SkipOneS().Logf(lvl, template, args...)
+}
+func Logw(lvl zapcore.Level, msg string, keysAndValues ...any) {
+	SkipOneS().Logw(lvl, msg, keysAndValues...)
 }
 func Debug(v ...any)                           { SkipOneS().Debug(v...) }
 func Debugf(template string, v ...any)         { SkipOneS().Debugf(template, v...) }
