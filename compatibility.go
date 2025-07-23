@@ -65,5 +65,5 @@ func Panicf(template string, v ...any)         { SkipOneS().Panicf(template, v..
 func Panicw(msg string, keysAndValues ...any)  { SkipOneS().Panicw(msg, keysAndValues...) }
 
 func With(args ...any) *zap.SugaredLogger {
-	return SkipOneS().With(args...)
+	return S().With(args...)
 }
