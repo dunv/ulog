@@ -7,6 +7,10 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+func init() {
+	Configure()
+}
+
 func Configure(o ...Option) {
 	opts := options{
 		level:                 zap.NewAtomicLevelAt(zapcore.InfoLevel),
