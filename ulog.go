@@ -42,6 +42,9 @@ func Configure(o ...Option) {
 	}
 
 	logger := zap.New(core, zapOpts...)
+	if len(opts.baseFields) > 0 {
+		logger = logger.With(opts.baseFields...)
+	}
 	zap.ReplaceGlobals(logger)
 
 	_globalMu.Lock()

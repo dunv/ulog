@@ -21,6 +21,7 @@ type options struct {
 	redirectOutput        io.Writer
 	redirectErr           io.Writer
 	additionalCores       []zapcore.Core
+	baseFields            []zapcore.Field
 }
 
 type funcOption struct {
@@ -81,5 +82,17 @@ func WithRedirectOutput(w io.Writer) Option {
 func WithAdditionalCores(cores ...zapcore.Core) Option {
 	return newFuncOption(func(o *options) {
 		o.additionalCores = cores
+	})
+}
+
+// WithBaseFields attaches persistent fields to the global logger, so they are
+// emitted on every subsequent log entry. They are applied to all cores (the
+// console encoder and any additional cores, e.g. an OTEL core), which makes
+// this the right place to stamp fleet-wide context such as the build version.
+//
+// Default: nil
+func WithBaseFields(fields ...zapcore.Field) Option {
+	return newFuncOption(func(o *options) {
+		o.baseFields = fields
 	})
 }
