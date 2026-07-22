@@ -27,6 +27,7 @@ func Configure(o ...Option) {
 	for _, opt := range o {
 		opt.apply(&opts)
 	}
+	setErrorClassifiers(opts.errorClassifiers)
 	encoder := newCustomEncoder(opts)
 	sink := zapcore.AddSync(opts.redirectOutput)
 	core := zapcore.NewCore(encoder, sink, opts.level)

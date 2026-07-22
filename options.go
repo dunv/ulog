@@ -22,6 +22,7 @@ type options struct {
 	redirectErr           io.Writer
 	additionalCores       []zapcore.Core
 	baseFields            []zapcore.Field
+	errorClassifiers      []func(error) string
 }
 
 type funcOption struct {
@@ -94,5 +95,19 @@ func WithAdditionalCores(cores ...zapcore.Core) Option {
 func WithBaseFields(fields ...zapcore.Field) Option {
 	return newFuncOption(func(o *options) {
 		o.baseFields = fields
+	})
+}
+
+// WithErrorClassifiers registers extra error classifiers used by ErrorType (and
+// therefore by Entry.Err). They are consulted, in order, only after the built-in
+// classes find no match; the first non-empty token wins. This lets a service add
+// its own low-cardinality classes — e.g. a mongo driver error matched by string
+// signature — without editing ulog's core. Each token is a log-dedup bucket, so
+// keep them low-cardinality.
+//
+// Default: nil
+func WithErrorClassifiers(fns ...func(error) string) Option {
+	return newFuncOption(func(o *options) {
+		o.errorClassifiers = fns
 	})
 }
