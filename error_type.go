@@ -66,6 +66,12 @@ func builtinErrorType(err error) string {
 		return "conn_reset"
 	case errors.Is(err, syscall.EPIPE):
 		return "broken_pipe"
+	case errors.Is(err, syscall.EHOSTUNREACH):
+		return "host_unreachable"
+	case errors.Is(err, syscall.ENETUNREACH):
+		return "net_unreachable"
+	case errors.Is(err, net.ErrClosed):
+		return "conn_closed"
 	case errors.Is(err, io.ErrUnexpectedEOF), errors.Is(err, io.EOF):
 		return "eof"
 	}

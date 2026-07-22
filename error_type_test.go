@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"syscall"
 	"testing"
 
@@ -31,6 +32,9 @@ func TestErrorTypeBuiltins(t *testing.T) {
 		{"conn_refused", syscall.ECONNREFUSED, "conn_refused"},
 		{"conn_reset", syscall.ECONNRESET, "conn_reset"},
 		{"broken_pipe", syscall.EPIPE, "broken_pipe"},
+		{"host_unreachable", syscall.EHOSTUNREACH, "host_unreachable"},
+		{"net_unreachable", syscall.ENETUNREACH, "net_unreachable"},
+		{"conn_closed", net.ErrClosed, "conn_closed"},
 		{"eof", io.EOF, "eof"},
 		{"unexpected_eof", io.ErrUnexpectedEOF, "eof"},
 		{"net_timeout", fakeTimeoutErr{}, "timeout"},
