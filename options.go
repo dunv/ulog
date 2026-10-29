@@ -22,6 +22,7 @@ type options struct {
 	redirectErr           io.Writer
 	additionalCores       []zapcore.Core
 	baseFields            []zapcore.Field
+	coreWrapper           func(zapcore.Core) zapcore.Core
 	errorClassifiers      []func(error) string
 }
 
@@ -95,6 +96,18 @@ func WithAdditionalCores(cores ...zapcore.Core) Option {
 func WithBaseFields(fields ...zapcore.Field) Option {
 	return newFuncOption(func(o *options) {
 		o.baseFields = fields
+	})
+}
+
+// WithCoreWrapper wraps the combined console and additional cores after base
+// fields are attached, before publishing the global and cached ulog loggers.
+// The wrapper is called once per Configure and must return a non-nil core.
+// A nil wrapper disables wrapping; if set more than once, the last option wins.
+//
+// Default: nil
+func WithCoreWrapper(wrap func(zapcore.Core) zapcore.Core) Option {
+	return newFuncOption(func(o *options) {
+		o.coreWrapper = wrap
 	})
 }
 

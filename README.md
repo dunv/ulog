@@ -30,3 +30,15 @@ ulog.Errorf("helloWorld %s", "today")
 ulog.Fatalf("helloWorld %s", "today")
 ulog.Panicf("helloWorld %s", "today")
 ```
+
+### Wrapping configured cores
+
+`WithCoreWrapper(func(zapcore.Core) zapcore.Core)` wraps the combined console and
+additional cores once during `Configure`, after `WithBaseFields` has attached its
+fields. Both Zap's global logger and ulog's cached/fluent loggers use the wrapped
+core. This allows field guards or hooks without configuring a second console sink.
+
+The wrapper must return a non-nil core. Passing `nil` disables wrapping; the last
+`WithCoreWrapper` option wins. Like other options, it is reset by a subsequent
+`Configure` unless supplied again. Existing configurations without this option are
+unchanged.
