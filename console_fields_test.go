@@ -31,15 +31,40 @@ func TestConsoleKeyValues(t *testing.T) {
 			defer buf.Free()
 			plain := buf.String()
 			if colors {
-				require.Contains(t, plain, colorJson+"destination="+colorEnd+"inventory")
-				require.Contains(t, plain, colorEnd+" | "+colorJson)
-				for _, color := range []string{colorJson, colorEnd, colorWarning} {
+				require.Contains(t, plain, colorDebug+"destination="+colorEnd+colorWarning+"inventory")
+				require.Contains(t, plain, colorEnd+" | "+colorDebug)
+				for _, color := range []string{colorDebug, colorEnd, colorWarning} {
 					plain = strings.ReplaceAll(plain, color, "")
 				}
 			}
 			require.NotContains(t, plain, "\x1b")
 			require.Equal(t, 1, strings.Count(plain, "\n"))
 			require.Contains(t, plain, "Failed to connect | destination=inventory attempt=3 error=\"connection refused\" empty=\"\" line=\"first\\nsecond\" escape=\"\\u001b[31m\" equals=\"a=b\" large=18446744073709551615 retry=true destination=other nested={\"items\":[\"a,b\",{\"n\":2}]}\n")
+		})
+	}
+}
+
+func TestConsoleKeyValuesLevelColors(t *testing.T) {
+	for _, level := range []zapcore.Level{zapcore.DebugLevel, zapcore.InfoLevel, zapcore.WarnLevel, zapcore.ErrorLevel, zapcore.DPanicLevel, zapcore.PanicLevel, zapcore.FatalLevel} {
+		t.Run(level.String(), func(t *testing.T) {
+			for _, colors := range []bool{false, true} {
+				enc := newCustomEncoder(options{consoleKeyValues: true, disableColors: !colors})
+				zap.String("base", "persistent").AddTo(enc)
+				buf, err := enc.Clone().EncodeEntry(zapcore.Entry{Level: level, Message: "message"}, []zap.Field{zap.Int("attempt", 3)})
+				require.NoError(t, err)
+				defer buf.Free()
+				if !colors {
+					require.NotContains(t, buf.String(), "\x1b")
+					require.True(t, strings.HasSuffix(buf.String(), " | base=persistent attempt=3\n"))
+					continue
+				}
+				valueColor := ""
+				if level >= zapcore.WarnLevel {
+					valueColor = string(levelToColorStart[level])
+				}
+				require.True(t, strings.HasSuffix(buf.String(), " | "+colorDebug+"base="+colorEnd+valueColor+"persistent "+colorDebug+"attempt="+colorEnd+valueColor+"3"+colorEnd+"\n"), buf.String())
+				require.NotContains(t, buf.String(), colorJson)
+			}
 		})
 	}
 }

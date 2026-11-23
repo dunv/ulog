@@ -43,8 +43,9 @@ ulog.Configure(
 ```
 
 For example: `Failed to connect | destination=inventory attempt=3 error="connection refused"`.
-Keys and `=` are dark grey; values use the terminal's default foreground. Existing
-message/level colors remain. `WithColors(false)` disables all console ANSI colors.
+Keys and `=` use the same lighter grey as DEBUG messages. DEBUG/INFO values use
+the terminal's default foreground; WARN and higher values use the message's level
+color. Existing message/level colors remain. `WithColors(false)` disables all console ANSI colors.
 Strings are quoted when empty or containing whitespace or special characters;
 JSON escaping keeps field newlines and terminal control sequences on one line.
 Nested objects and arrays remain compact JSON values. Field order, duplicate keys,

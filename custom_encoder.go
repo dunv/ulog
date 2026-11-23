@@ -127,7 +127,7 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 					line.AppendString(colorEnd)
 				}
 				line.AppendString(c.cfg.ConsoleSeparator)
-				c.appendKeyValues(line, buf.Bytes())
+				c.appendKeyValues(line, buf.Bytes(), ent.Level)
 			} else {
 				if !c.opts.disableColors {
 					line.AppendString(colorJson)
@@ -160,7 +160,7 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 // appendKeyValues scans the JSON encoder's trusted output without decoding it
 // into maps or interfaces. This preserves order, duplicate keys, numeric precision
 // and Zap's field/marshaler semantics while avoiding per-field allocations.
-func (c customEncoder) appendKeyValues(line *buffer.Buffer, object []byte) {
+func (c customEncoder) appendKeyValues(line *buffer.Buffer, object []byte, level zapcore.Level) {
 	for i := 1; i < len(object)-1; {
 		keyEnd := jsonStringEnd(object, i)
 		key := consoleValue(object[i:keyEnd])
@@ -185,12 +185,15 @@ func (c customEncoder) appendKeyValues(line *buffer.Buffer, object []byte) {
 		}
 	valueEnd:
 		if !c.opts.disableColors {
-			line.AppendString(colorJson)
+			line.AppendString(colorDebug)
 		}
 		line.AppendBytes(key)
 		line.AppendByte('=')
 		if !c.opts.disableColors {
 			line.AppendString(colorEnd)
+			if level >= zapcore.WarnLevel {
+				line.AppendBytes(levelToColorStart[level])
+			}
 		}
 		line.AppendBytes(consoleValue(object[start:i]))
 		i++ // skip comma or closing brace
