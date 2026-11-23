@@ -31,6 +31,42 @@ ulog.Fatalf("helloWorld %s", "today")
 ulog.Panicf("helloWorld %s", "today")
 ```
 
+### Readable console fields
+
+Enable key/value console fields explicitly:
+
+```go
+ulog.Configure(
+    ulog.WithStripAdditionalFields(false),
+    ulog.WithConsoleKeyValues(true),
+)
+```
+
+For example: `Failed to connect | destination=inventory attempt=3 error="connection refused"`.
+Keys and `=` are dark grey; values use the terminal's default foreground. Existing
+message/level colors remain. `WithColors(false)` disables all console ANSI colors.
+Strings are quoted when empty or containing whitespace or special characters;
+JSON escaping keeps field newlines and terminal control sequences on one line.
+Nested objects and arrays remain compact JSON values. Field order, duplicate keys,
+and numeric precision are preserved, including persistent `.With(...)` fields.
+Additional structured cores are unchanged.
+
+The default remains the existing JSON suffix when fields are enabled. Keep that
+format for consumers that parse console JSON. `WithStripAdditionalFields(true)`
+still suppresses fields in either format. The obsolete dummy-thread column has
+been removed.
+
+Compare encoder costs (including allocations and colored output) with:
+
+```sh
+go test -run '^$' -bench BenchmarkConsoleFields -benchmem -count=5 ./...
+```
+
+The benchmark covers no fields, error context, persistent fields, and nested
+payloads, comparing JSON, key/value, and stripped-field modes. It measures encoding,
+not terminal I/O. The key/value formatter scans Zap's JSON buffer directly without
+allocating a map or decoding field values.
+
 ### Wrapping configured cores
 
 `WithCoreWrapper(func(zapcore.Core) zapcore.Core)` wraps the combined console and

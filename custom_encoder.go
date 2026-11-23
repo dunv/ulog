@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode"
+	"unicode/utf8"
 
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
@@ -98,15 +100,13 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 	line := _pool.Get()
 
 	// Coloring
-	line.AppendBytes(levelToColorStart[ent.Level])
+	if !c.opts.disableColors {
+		line.AppendBytes(levelToColorStart[ent.Level])
+	}
 	line.AppendString(ent.Time.Format(timeFormat))
 	line.AppendString(c.cfg.ConsoleSeparator)
 	c.appendPaddedLevel(ent.Level, line)
 	line.AppendString(c.cfg.ConsoleSeparator)
-	if c.opts.renderDummyThread {
-		line.AppendString("n/a")
-		line.AppendString(c.cfg.ConsoleSeparator)
-	}
 	c.appendCaller(ent.Caller, line)
 	line.AppendString(c.cfg.ConsoleSeparator)
 
@@ -122,11 +122,23 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 		// "Abuse" zapcore's jsonEncoder to render fields
 		buf, _ := c.Encoder.EncodeEntry(ent, fields)
 		if buf.Len() > 2 { // len() == 2 means only "{}" was written, no fields
-			line.AppendString(colorJson)
-			line.AppendString(c.cfg.ConsoleSeparator)
-			_, _ = line.Write(buf.Bytes())
-			line.AppendString(colorEnd)
-		} else {
+			if c.opts.consoleKeyValues {
+				if !c.opts.disableColors {
+					line.AppendString(colorEnd)
+				}
+				line.AppendString(c.cfg.ConsoleSeparator)
+				c.appendKeyValues(line, buf.Bytes())
+			} else {
+				if !c.opts.disableColors {
+					line.AppendString(colorJson)
+				}
+				line.AppendString(c.cfg.ConsoleSeparator)
+				_, _ = line.Write(buf.Bytes())
+			}
+			if !c.opts.disableColors {
+				line.AppendString(colorEnd)
+			}
+		} else if !c.opts.disableColors {
 			line.AppendBytes(levelToColorEnd[ent.Level])
 		}
 		buf.Free()
@@ -137,10 +149,97 @@ func (c customEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*
 	}
 
 	// Coloring
-	line.AppendBytes(levelToColorEnd[ent.Level])
+	if !c.opts.disableColors {
+		line.AppendBytes(levelToColorEnd[ent.Level])
+	}
 	line.AppendString(zapcore.DefaultLineEnding)
 
 	return line, nil
+}
+
+// appendKeyValues scans the JSON encoder's trusted output without decoding it
+// into maps or interfaces. This preserves order, duplicate keys, numeric precision
+// and Zap's field/marshaler semantics while avoiding per-field allocations.
+func (c customEncoder) appendKeyValues(line *buffer.Buffer, object []byte) {
+	for i := 1; i < len(object)-1; {
+		keyEnd := jsonStringEnd(object, i)
+		key := consoleValue(object[i:keyEnd])
+		i = keyEnd + 1 // skip colon
+		start := i
+		depth := 0
+		for i < len(object)-1 {
+			switch object[i] {
+			case '"':
+				i = jsonStringEnd(object, i)
+				continue
+			case '{', '[':
+				depth++
+			case '}', ']':
+				depth--
+			case ',':
+				if depth == 0 {
+					goto valueEnd
+				}
+			}
+			i++
+		}
+	valueEnd:
+		if !c.opts.disableColors {
+			line.AppendString(colorJson)
+		}
+		line.AppendBytes(key)
+		line.AppendByte('=')
+		if !c.opts.disableColors {
+			line.AppendString(colorEnd)
+		}
+		line.AppendBytes(consoleValue(object[start:i]))
+		i++ // skip comma or closing brace
+		if i < len(object)-1 {
+			line.AppendByte(' ')
+		}
+	}
+}
+
+// jsonStringEnd returns the position after a quoted string in trusted JSON.
+func jsonStringEnd(s []byte, start int) int {
+	for i := start + 1; i < len(s); i++ {
+		switch s[i] {
+		case '\\':
+			i++
+		case '"':
+			return i + 1
+		}
+	}
+	return len(s)
+}
+
+// Keep JSON escaping for special strings, including control characters and ANSI
+// escapes. Ordinary strings can be displayed without quotes or allocations.
+func consoleValue(raw []byte) []byte {
+	if len(raw) < 2 || raw[0] != '"' {
+		return raw
+	}
+	value := raw[1 : len(raw)-1]
+	if len(value) == 0 {
+		return raw
+	}
+	for i := 0; i < len(value); i++ {
+		switch value[i] {
+		case '\\', '"', '=', '{', '}', '[', ']':
+			return raw
+		}
+		if value[i] <= ' ' {
+			return raw
+		}
+		if value[i] >= utf8.RuneSelf {
+			r, size := utf8.DecodeRune(value[i:])
+			if unicode.IsSpace(r) || unicode.IsControl(r) {
+				return raw
+			}
+			i += size - 1
+		}
+	}
+	return value
 }
 
 func (c *customEncoder) appendPaddedLevel(l zapcore.Level, enc *buffer.Buffer) {

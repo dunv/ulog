@@ -15,7 +15,8 @@ type options struct {
 	level                 zap.AtomicLevel
 	callerFieldWidth      int
 	stripAdditionalFields bool
-	renderDummyThread     bool
+	consoleKeyValues      bool
+	disableColors         bool
 	replaceNewlines       bool
 	newlineReplacement    string
 	redirectOutput        io.Writer
@@ -62,6 +63,22 @@ func WithCallerFieldWidth(fieldWidth int) Option {
 func WithStripAdditionalFields(stripAdditionalFields bool) Option {
 	return newFuncOption(func(o *options) {
 		o.stripAdditionalFields = stripAdditionalFields
+	})
+}
+
+// WithConsoleKeyValues renders console fields as key=value pairs instead of JSON.
+// Fields must also be enabled with WithStripAdditionalFields(false).
+// Additional structured cores are unaffected. Default: false.
+func WithConsoleKeyValues(enabled bool) Option {
+	return newFuncOption(func(o *options) {
+		o.consoleKeyValues = enabled
+	})
+}
+
+// WithColors controls ANSI colors in console output. Default: true.
+func WithColors(enabled bool) Option {
+	return newFuncOption(func(o *options) {
+		o.disableColors = !enabled
 	})
 }
 

@@ -16,7 +16,6 @@ func Configure(o ...Option) {
 		level:                 zap.NewAtomicLevelAt(zapcore.InfoLevel),
 		callerFieldWidth:      -1,
 		stripAdditionalFields: true,
-		renderDummyThread:     false,
 		replaceNewlines:       false,
 		newlineReplacement:    "",
 		redirectOutput:        os.Stdout,
